@@ -152,6 +152,26 @@ function Snowfall() {
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
+
+  const navigateToSection = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: (typeof navLinks)[number][1],
+  ) => {
+    event.preventDefault();
+    setOpen(false);
+
+    window.setTimeout(() => {
+      const target = document.querySelector<HTMLElement>(href);
+      if (!target) return;
+
+      window.history.pushState(null, "", href);
+      target.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    }, open ? 120 : 0);
+  };
 
   return (
     <header className="site-header">
@@ -159,7 +179,7 @@ function Header() {
         <Wordmark />
         <nav className="desktop-nav" aria-label="Primary navigation">
           {navLinks.map(([label, href]) => (
-            <a key={href} href={href}>
+            <a key={href} href={href} onClick={(event) => navigateToSection(event, href)}>
               {label}
             </a>
           ))}
@@ -193,7 +213,7 @@ function Header() {
                 <nav aria-label="Mobile navigation">
                   {navLinks.map(([label, href], index) => (
                     <Dialog.Close asChild key={href}>
-                      <a href={href}>
+                      <a href={href} onClick={(event) => navigateToSection(event, href)}>
                         <span>0{index + 1}</span>
                         {label}
                         <ArrowRight size={18} />
@@ -396,18 +416,20 @@ function SignalStrip() {
 }
 
 function SectionHeading({
+  id,
   index,
   kicker,
   title,
   copy,
 }: {
+  id: "about" | "paths" | "rewards" | "timeline" | "partners";
   index: string;
   kicker: string;
   title: React.ReactNode;
   copy?: string;
 }) {
   return (
-    <div className="section-heading">
+    <div className="section-heading" id={id}>
       <div className="section-heading__meta">
         <span>{index}</span>
         <p>{kicker}</p>
@@ -422,8 +444,9 @@ function SectionHeading({
 
 function About() {
   return (
-    <section className="section about" id="about">
+    <section className="section about">
       <SectionHeading
+        id="about"
         index="01"
         kicker="WHY NSOC"
         title={
@@ -471,8 +494,9 @@ function Pathways() {
   const Icon = role.icon;
 
   return (
-    <section className="section pathways" id="paths">
+    <section className="section pathways">
       <SectionHeading
+        id="paths"
         index="02"
         kicker="CHOOSE YOUR PATH"
         title={
@@ -585,8 +609,9 @@ function Rewards() {
   };
 
   return (
-    <section className="section rewards-section" id="rewards">
+    <section className="section rewards-section">
       <SectionHeading
+        id="rewards"
         index="03"
         kicker="REWARDS VAULT"
         title={
@@ -644,8 +669,9 @@ function Rewards() {
 
 function Timeline() {
   return (
-    <section className="section timeline-section" id="timeline">
+    <section className="section timeline-section">
       <SectionHeading
+        id="timeline"
         index="04"
         kicker="WINTER BUILD LOG"
         title={
@@ -681,8 +707,9 @@ function Timeline() {
 
 function PartnerNetwork() {
   return (
-    <section className="section partner-section" id="partners">
+    <section className="section partner-section">
       <SectionHeading
+        id="partners"
         index="05"
         kicker="BACKED BY THE ECOSYSTEM"
         title={
