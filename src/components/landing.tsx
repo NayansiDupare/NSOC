@@ -9,6 +9,7 @@ import Image from "next/image";
 import {
   ArrowDown,
   ArrowRight,
+  CalendarDays,
   Check,
   ChevronDown,
   GitFork,
@@ -668,37 +669,82 @@ function Rewards() {
 }
 
 function Timeline() {
+  const reduceMotion = useReducedMotion();
+
   return (
-    <section className="section timeline-section">
-      <SectionHeading
-        id="timeline"
-        index="04"
-        kicker="WINTER BUILD LOG"
-        title={
-          <>
-            Put these dates
-            <span>somewhere warm.</span>
-          </>
-        }
-        copy="Keep the important dates in view and leave enough room for iteration, review, and the final merge."
-      />
-      <div className="timeline-console reveal-line">
-        <div className="timeline-console__head">
-          <span>NSoC Winter · season schedule</span>
-          <span>● ● ●</span>
+    <section className="section timeline-section" id="timeline">
+      <div className="timeline-heading">
+        <div className="eyebrow">
+          <Snowflake size={14} />
+          Program timeline
         </div>
+        <h2>
+          Here&apos;s how we <span>planned.</span>
+        </h2>
+        <p>
+          Follow the journey from registration to results. Each milestone moves the community
+          closer to building, shipping, and celebrating meaningful open-source work together.
+        </p>
+      </div>
+
+      <div className="timeline-journey">
+        <svg
+          className="timeline-path"
+          viewBox="0 0 1200 1610"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="timeline-gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--mint)" />
+              <stop offset="45%" stopColor="var(--cyan)" />
+              <stop offset="76%" stopColor="var(--violet)" />
+              <stop offset="100%" stopColor="#f2ba54" />
+            </linearGradient>
+          </defs>
+          <path
+            className="timeline-path__ghost"
+            d="M600 70C760 152 760 238 600 320S440 488 600 570s160 168 0 250-160 168 0 250 160 168 0 250-160 168 0 250"
+          />
+          <motion.path
+            className="timeline-path__active"
+            d="M600 70C760 152 760 238 600 320S440 488 600 570s160 168 0 250-160 168 0 250 160 168 0 250-160 168 0 250"
+            initial={reduceMotion ? { pathLength: 1 } : { pathLength: 0 }}
+            whileInView={{ pathLength: 1 }}
+            viewport={{ once: true, amount: 0.12 }}
+            transition={{ duration: 2.4, ease: [0.22, 0.8, 0.2, 1] }}
+          />
+        </svg>
+
         <ol>
-          {timeline.map((item, index) => (
-            <li key={item.title}>
-              <div className="timeline-index">{String(index + 1).padStart(2, "0")}</div>
-              <div className="timeline-marker">
-                <span />
-              </div>
-              <time>{item.date}</time>
-              <h3>{item.title}</h3>
-              <span className="timeline-state">{item.state}</span>
-            </li>
-          ))}
+          {timeline.map((item, index) => {
+            const Icon = item.icon;
+            const step = String(index + 1).padStart(2, "0");
+
+            return (
+              <li key={item.title}>
+                <span className="timeline-node" aria-hidden="true"><span /></span>
+                <article className="timeline-card">
+                  <span className="timeline-card__number" aria-hidden="true">{step}</span>
+                  <div className="timeline-card__meta">
+                    <span className="timeline-card__icon"><Icon size={26} strokeWidth={1.7} /></span>
+                    <time dateTime={item.dateTime}>
+                      <CalendarDays size={14} />
+                      {item.date}
+                    </time>
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                  <div className="timeline-progress" aria-label={`Step ${index + 1} of ${timeline.length}`}>
+                    <span>Step {step} / {String(timeline.length).padStart(2, "0")}</span>
+                    <span className="timeline-progress__track" aria-hidden="true">
+                      <span style={{ width: `${((index + 1) / timeline.length) * 100}%` }} />
+                    </span>
+                  </div>
+                </article>
+              </li>
+            );
+          })}
         </ol>
       </div>
     </section>
