@@ -2375,15 +2375,17 @@ textarea:focus-visible {
   height: calc(var(--footer-rise) - var(--footer-pad-b));
   align-items: flex-end;
 }
-
 .nsoc-footer__bar {
-  display: grid;
   width: 100%;
   min-height: 44px;
+
+  display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   column-gap: 1.5rem;
+
   padding-bottom: var(--footer-pad-b);
+
   color: var(--footer-muted);
   font-size: 0.75rem;
 }

@@ -228,7 +228,7 @@ export default function Footer() {
                 <p className="text-sm font-bold uppercase tracking-[0.18em] text-[var(--footer-text)]">
                   NSoC
                 </p>
-                <p className="text-[10px] uppercase tracking-[0.24em] text-cyan-400">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-[var(--footer-accent)]">
                   Winter Edition
                 </p>
               </div>
@@ -237,10 +237,12 @@ export default function Footer() {
             <h2 className="mt-6 max-w-xl text-3xl font-bold leading-tight text-[var(--footer-text)] sm:text-4xl">
               Real projects.
               <span className="block">Real contributors.</span>
-              <span className="block text-cyan-400">Real impact.</span>
+              <span className="block text-[var(--footer-accent)]">
+                Real impact.
+              </span>
             </h2>
 
-            <p className="mt-4 max-w-md leading-7 text-slate-300/75">
+            <p className="mt-4 max-w-md leading-7 text-[var(--footer-muted)]">
               A 45-day open source program where project admins bring real
               codebases and contributors work on meaningful issues that ship to
               production.
@@ -248,7 +250,7 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Footer navigation">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--footer-accent)]">
               Sections
             </p>
             <div className="mt-5 flex flex-col">
@@ -256,9 +258,9 @@ export default function Footer() {
                 <a
                   key={label}
                   href={href}
-                  className="group flex min-h-11 items-center gap-3 text-sm text-slate-300/75 transition hover:text-[var(--footer-text)]"
+                  className="group flex min-h-11 items-center gap-3 text-sm text-[var(--footer-muted)] transition hover:text-[var(--footer-accent-hover)]"
                 >
-                  <span className="w-5 text-[10px] text-slate-400/60">
+                  <span className="w-5 text-[10px] text-[color-mix(in_srgb,var(--footer-muted)_65%,transparent)]">
                     {number}
                   </span>
                   <span className="relative">
@@ -271,7 +273,7 @@ export default function Footer() {
           </nav>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--footer-accent)]">
               Follow
             </p>
             <div className="mt-5 flex flex-col">
@@ -284,7 +286,7 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex min-h-11 items-center gap-3 text-sm text-slate-300/75 transition hover:text-[var(--footer-text)]"
+                    className="group flex min-h-11 items-center gap-3 text-sm text-[var(--footer-muted)] transition hover:text-[var(--footer-accent-hover)]"
                   >
                     <Icon className="h-4 w-4" />
                     <span className="relative">
@@ -305,23 +307,26 @@ export default function Footer() {
         {/* Bottom bar sits on the dark planet below the glowing rim. */}
         <div className="nsoc-footer__ground">
           <div className="nsoc-footer__bar">
-            <p>© 2026 NSoC. All rights reserved.</p>
+            <p className="text-[var(--footer-muted)]">
+              © 2026 NSoC. All rights reserved.
+            </p>
 
-            <p className="hidden uppercase tracking-[0.18em] sm:block">
+            <p className="hidden uppercase tracking-[0.18em] text-[var(--footer-muted)] sm:block">
               Open source winter
             </p>
 
             <button
               type="button"
               onClick={backToTop}
-              className="group flex items-center gap-3 justify-self-start transition hover:text-[var(--footer-text)] sm:justify-self-end"
+              className="group flex items-center gap-3 justify-self-start text-[var(--footer-muted)] transition-colors hover:text-[var(--footer-accent-hover)] sm:justify-self-end"
             >
               <span className="relative">
                 Back to top
                 <span className="absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100" />
               </span>
-              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition group-hover:border-cyan-400 group-hover:text-cyan-400">
-                <ArrowUp className="h-4 w-4 transition-transform group-hover:-translate-y-1" />
+
+              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--footer-border)] text-[var(--footer-accent)] transition-colors group-hover:border-[var(--footer-accent)] group-hover:text-[var(--footer-accent-hover)]">
+                <ArrowUp className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" />
               </span>
             </button>
           </div>
