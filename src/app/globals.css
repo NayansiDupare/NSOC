@@ -2191,31 +2191,38 @@ textarea:focus-visible {
   }
 }
 
-
 /* ==========================
    PARALLAX CURTAIN FOOTER
    Adapted from the reference footer's scroll-arrival model.
    ========================== */
 .nsoc-footer {
+  --footer-curtain: 1;
   --footer-rise: 130px;
   --footer-pad-b: 20px;
-  --footer-giant-fs: clamp(12rem, min(30vw, 44svh), 27rem);
-  --footer-stroke: rgba(103, 232, 249, 0.38);
-  --footer-curtain: 1;
 
   position: sticky;
   bottom: 0;
   z-index: 0;
+
   display: flex;
   flex-direction: column;
+
   min-height: min(100svh, 760px);
+
+  padding: clamp(3.5rem, 6vw, 6rem) 0
+    calc(var(--footer-pad-b) + env(safe-area-inset-bottom));
+
   color: #eaf8ff;
-  overflow: clip;
 
   background:
-    radial-gradient(circle at 50% 76%, rgba(34, 211, 238, 0.13), transparent 34%),
-    radial-gradient(circle at 15% 15%, rgba(14, 165, 233, 0.08), transparent 28%),
-    linear-gradient(180deg, #030812 0%, #061522 48%, #020711 100%);
+    radial-gradient(
+      circle at 50% 75%,
+      rgba(34, 211, 238, 0.13),
+      transparent 38%
+    ),
+    linear-gradient(180deg, #04101c 0%, #071927 48%, #020911 100%);
+
+  overflow: clip;
 }
 
 /* If the content cannot fit in the viewport, a sticky curtain would hide its top. */
@@ -2223,6 +2230,39 @@ textarea:focus-visible {
   position: relative;
 }
 
+.nsoc-footer__dots {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  pointer-events: none;
+
+  opacity: 0.48;
+
+  background-image: radial-gradient(
+    circle,
+    rgba(103, 232, 249, 0.2) 1px,
+    transparent 1.15px
+  );
+
+  background-size: 13px 13px;
+
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 8%,
+    rgba(0, 0, 0, 0.35) 24%,
+    #000 58%,
+    #000 100%
+  );
+
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 8%,
+    rgba(0, 0, 0, 0.35) 24%,
+    #000 58%,
+    #000 100%
+  );
+}
 /* The main page is the curtain that covers the footer until it scrolls away. */
 .page-shell {
   position: relative;
@@ -2327,7 +2367,7 @@ textarea:focus-visible {
   border-top: 1px solid rgba(103, 232, 249, 0.78);
   box-shadow:
     0 -3px 18px rgba(34, 211, 238, 0.22),
-    0 -15px 75px rgba(14, 165, 233, 0.10);
+    0 -15px 75px rgba(14, 165, 233, 0.1);
 }
 
 .nsoc-footer__ground {

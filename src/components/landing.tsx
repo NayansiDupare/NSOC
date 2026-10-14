@@ -962,7 +962,7 @@ export function Landing() {
       <div className="grain" aria-hidden="true" />
       <Header />
       <ThemePull />
-      <main id="main-content">
+      <main id="main-content" className="page-shell">
         <Hero />
         <SignalStrip />
         <About />
