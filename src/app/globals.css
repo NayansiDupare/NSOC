@@ -2196,8 +2196,21 @@ textarea:focus-visible {
   z-index: 0;
 
   min-height: min(100svh, 780px);
+
+  color: #eaf8ff;
+
+  background:
+    radial-gradient(
+      circle at 50% 78%,
+      rgba(34, 211, 238, 0.14),
+      transparent 34%
+    ),
+    linear-gradient(180deg, #030b16 0%, #061522 45%, #020811 100%);
+
   overflow: clip;
 }
+
+/* main page covers the footer until it scrolls away */
 .page-shell {
   position: relative;
   z-index: 10;
@@ -2205,53 +2218,129 @@ textarea:focus-visible {
   min-height: 100vh;
   background: var(--page-background);
 }
+
 .nsoc-footer__dots {
   position: absolute;
   inset: 0;
   z-index: 0;
+
   opacity: 0.24;
+
   background-image: radial-gradient(
     circle,
     rgba(103, 232, 249, 0.28) 1px,
     transparent 1px
   );
+
   background-size: 28px 28px;
+
   -webkit-mask-image: linear-gradient(to bottom, transparent 8%, #000 100%);
+
   mask-image: linear-gradient(to bottom, transparent 8%, #000 100%);
+
   pointer-events: none;
 }
 
-.page-shell {
-  position: relative;
-  z-index: 10;
+/* ===========================
+   GIANT NSOC WORDMARK
+   =========================== */
 
-  min-height: 100vh;
-  background: var(--page-background);
+.nsoc-footer__giant {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 92px;
+
+  z-index: 1;
+
+  display: flex;
+  justify-content: center;
+
+  overflow: hidden;
+
+  pointer-events: none;
+  user-select: none;
 }
+
+.nsoc-footer__giant > div {
+  position: relative;
+
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.nsoc-footer__giant-text {
+  display: block;
+
+  font-family: var(--font-display);
+
+  font-size: clamp(10rem, min(29vw, 44svh), 27rem);
+
+  font-weight: 400;
+
+  line-height: 0.78;
+  letter-spacing: -0.045em;
+
+  white-space: nowrap;
+
+  backface-visibility: hidden;
+}
+
+.nsoc-footer__giant-text--outline {
+  color: transparent;
+
+  -webkit-text-stroke: 1.25px rgba(103, 232, 249, 0.42);
+
+  filter: drop-shadow(0 0 16px rgba(34, 211, 238, 0.12));
+}
+
+.nsoc-footer__giant-text--solid {
+  position: absolute;
+  inset: 0;
+
+  color: rgba(235, 253, 255, 0.96);
+
+  filter: drop-shadow(0 0 30px rgba(34, 211, 238, 0.18));
+
+  will-change: clip-path, opacity;
+}
+
+/* ===========================
+   HORIZON
+   =========================== */
 
 .nsoc-footer__horizon {
   position: absolute;
+
   z-index: 2;
+
   left: 50%;
   bottom: -4700px;
+
   width: max(5200px, 420vw);
   height: 4800px;
+
   transform: translateX(-50%);
+
   border-radius: 50% 50% 0 0;
+
   background: radial-gradient(
     closest-side,
-    #020b14 98.45%,
+    #020811 98.45%,
     rgba(14, 165, 233, 0.74) 99.05%,
     rgba(103, 232, 249, 0.92) 100%
   );
+
   box-shadow:
     0 -5px 34px rgba(34, 211, 238, 0.18),
     0 -14px 90px rgba(14, 165, 233, 0.08);
+
   pointer-events: none;
 }
-
 @media (max-width: 899px) {
   .nsoc-footer {
+    position: relative;
     min-height: auto;
   }
 
