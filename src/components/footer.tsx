@@ -99,8 +99,8 @@ function useFooterArrival(
     const measure = () => {
       const footerHeight = Math.max(1, footer.offsetHeight);
       const viewportHeight = window.innerHeight;
-      const isMobile = window.innerWidth < 900;
-      const tooTall = isMobile && footerHeight > viewportHeight;
+      // const isMobile = window.innerWidth < 900;
+      const tooTall = footerHeight > viewportHeight * 1.35;
 
       setFlow(tooTall);
 
@@ -225,7 +225,7 @@ export default function Footer() {
                 className="hidden h-10 w-10 object-contain dark:block"
               />
               <div>
-                <p className="text-sm font-bold uppercase tracking-[0.18em] text-white">
+                <p className="text-sm font-bold uppercase tracking-[0.18em] text-[var(--footer-text)]">
                   NSoC
                 </p>
                 <p className="text-[10px] uppercase tracking-[0.24em] text-cyan-400">
@@ -234,7 +234,7 @@ export default function Footer() {
               </div>
             </a>
 
-            <h2 className="mt-6 max-w-xl text-3xl font-bold leading-tight text-white sm:text-4xl">
+            <h2 className="mt-6 max-w-xl text-3xl font-bold leading-tight text-[var(--footer-text)] sm:text-4xl">
               Real projects.
               <span className="block">Real contributors.</span>
               <span className="block text-cyan-400">Real impact.</span>
@@ -256,7 +256,7 @@ export default function Footer() {
                 <a
                   key={label}
                   href={href}
-                  className="group flex min-h-11 items-center gap-3 text-sm text-slate-300/75 transition hover:text-white"
+                  className="group flex min-h-11 items-center gap-3 text-sm text-slate-300/75 transition hover:text-[var(--footer-text)]"
                 >
                   <span className="w-5 text-[10px] text-slate-400/60">
                     {number}
@@ -284,7 +284,7 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex min-h-11 items-center gap-3 text-sm text-slate-300/75 transition hover:text-white"
+                    className="group flex min-h-11 items-center gap-3 text-sm text-slate-300/75 transition hover:text-[var(--footer-text)]"
                   >
                     <Icon className="h-4 w-4" />
                     <span className="relative">
@@ -314,7 +314,7 @@ export default function Footer() {
             <button
               type="button"
               onClick={backToTop}
-              className="group flex items-center gap-3 justify-self-start transition hover:text-white sm:justify-self-end"
+              className="group flex items-center gap-3 justify-self-start transition hover:text-[var(--footer-text)] sm:justify-self-end"
             >
               <span className="relative">
                 Back to top
@@ -333,7 +333,7 @@ export default function Footer() {
           style={reduceMotion ? undefined : { y: wordmarkY }}
         >
           <Image
-            src="/outline3.png"
+            src="/bird.png"
             alt=""
             fill
             sizes="(max-width: 768px) 70vw, 46vw"
