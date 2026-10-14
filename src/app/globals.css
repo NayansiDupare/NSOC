@@ -2295,69 +2295,57 @@ textarea:focus-visible {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(var(--footer-rise) - var(--footer-giant-fs) * 0.17);
+  bottom: calc(var(--footer-rise) - 6rem);
+
   z-index: 1;
+
   display: flex;
   justify-content: center;
-  font-size: var(--footer-giant-fs);
-  line-height: 0.8;
+
   pointer-events: none;
   user-select: none;
 }
 
 .nsoc-footer__giant-rise {
   position: relative;
-  will-change: transform;
-  transform: translateZ(0);
-}
 
-.nsoc-footer__giant {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: calc(var(--footer-rise) - 10rem);
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-  user-select: none;
-}
-
-.nsoc-footer__giant-rise {
-  position: relative;
-  will-change: transform;
-  transform: translateZ(0);
-}
-
-.nsoc-footer__giant-graphic {
-  width: min(54rem, 72vw);
+  width: min(30rem, 42vw);
   aspect-ratio: 1 / 1;
+
+  will-change: transform;
+  transform: translateZ(0);
 }
 
-.nsoc-footer__giant-image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  user-select: none;
-  pointer-events: none;
-}
-
-.nsoc-footer__giant-image--outline {
-  opacity: 0.28;
-  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.06));
-}
-
+.nsoc-footer__giant-image,
 .nsoc-footer__giant-fill-mask {
   position: absolute;
   inset: 0;
-  will-change: clip-path;
+
+  width: 100%;
+  height: 100%;
+}
+
+.nsoc-footer__giant-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+  object-position: center;
+
+  pointer-events: none;
+  user-select: none;
+}
+
+.nsoc-footer__giant-fill-mask {
   overflow: hidden;
+  will-change: clip-path;
+}
+.nsoc-footer__giant-image--outline {
+  opacity: 0.35;
 }
 
 .nsoc-footer__giant-image--solid {
-  filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.08));
+  opacity: 1;
 }
 /* Reserve the vertical space that the giant wordmark rises into. */
 .nsoc-footer__gap {
@@ -2461,6 +2449,25 @@ textarea:focus-visible {
   .nsoc-footer__bar > :nth-child(3) {
     grid-area: top;
   }
+  .nsoc-footer__giant {
+    bottom: calc(var(--footer-rise) - 7rem);
+  }
+
+  .nsoc-footer__giant-graphic {
+    width: min(26rem, 88vw);
+  }
+
+  .nsoc-footer__gap {
+    min-height: clamp(10rem, 34vw, 16rem);
+  }
+
+  .nsoc-footer__giant-rise {
+    width: min(22rem, 70vw);
+  }
+
+  .nsoc-footer__giant {
+    bottom: calc(var(--footer-rise) - 4.5rem);
+  }
 }
 
 @media (max-height: 499px) and (orientation: landscape) {
@@ -2474,18 +2481,5 @@ textarea:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .nsoc-footer__giant-text--solid {
     clip-path: inset(0 0 0 0) !important;
-  }
-}
-@media (max-width: 767px) {
-  .nsoc-footer__giant {
-    bottom: calc(var(--footer-rise) - 7rem);
-  }
-
-  .nsoc-footer__giant-graphic {
-    width: min(26rem, 88vw);
-  }
-
-  .nsoc-footer__gap {
-    min-height: clamp(10rem, 34vw, 16rem);
   }
 }

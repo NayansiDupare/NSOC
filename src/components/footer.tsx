@@ -208,7 +208,7 @@ export default function Footer() {
       <div aria-hidden="true" className="nsoc-footer__dots" />
 
       <div className="nsoc-footer__inner mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 pt-14 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]">
+        <div className="grid gap-12 pt-14 pb-10 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]">
           <div>
             <a href="#top" className="inline-flex items-center gap-3">
               <Image
@@ -328,19 +328,17 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
       <div ref={giantRef} aria-hidden="true" className="nsoc-footer__giant">
         <motion.div
-          className="nsoc-footer__giant-rise nsoc-footer__giant-graphic"
+          className="nsoc-footer__giant-rise"
           style={reduceMotion ? undefined : { y: wordmarkY }}
         >
           <Image
             src="/outline3.png"
             alt=""
-            width={200}
-            height={200}
+            fill
+            sizes="(max-width: 768px) 70vw, 46vw"
             className="nsoc-footer__giant-image nsoc-footer__giant-image--outline"
-            priority
           />
 
           <motion.div
@@ -350,8 +348,8 @@ export default function Footer() {
             <Image
               src="/outline2.png"
               alt=""
-              width={200}
-              height={200}
+              fill
+              sizes="(max-width: 768px) 70vw, 46vw"
               className="nsoc-footer__giant-image nsoc-footer__giant-image--solid"
             />
           </motion.div>
