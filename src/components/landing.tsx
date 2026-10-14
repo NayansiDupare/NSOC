@@ -1,17 +1,15 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as Accordion from "@radix-ui/react-accordion";
 import * as Dialog from "@radix-ui/react-dialog";
-import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import confetti from "canvas-confetti";
-import Image from "next/image";
 import {
   ArrowDown,
   ArrowRight,
   Check,
   ChevronDown,
-  GitFork,
   GitMerge,
   Mail,
   Menu,
@@ -21,22 +19,19 @@ import {
   Sun,
   X,
 } from "lucide-react";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-} from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import Footer from "@/components/footer";
 import {
   partners,
   rewards,
   roles,
-  socialLinks,
   sponsors,
   stats,
   timeline,
@@ -44,14 +39,15 @@ import {
   workflow,
 } from "@/lib/data";
 import { useExperienceStore } from "@/lib/store";
-import { cn } from "@/lib/utils";
-
+import { cn } from "@/lib/utils";";
 type Stat = { value: string; label: string; suffix: string };
 
 const sponsorSchema = z.object({
   company: z.string().min(2, "Tell us who you represent."),
   email: z.email("Enter a valid email."),
-  message: z.string().min(20, "Add at least 20 characters so the team has context."),
+  message: z
+    .string()
+    .min(20, "Add at least 20 characters so the team has context."),
 });
 
 type SponsorForm = z.infer<typeof sponsorSchema>;
@@ -161,16 +157,19 @@ function Header() {
     event.preventDefault();
     setOpen(false);
 
-    window.setTimeout(() => {
-      const target = document.querySelector<HTMLElement>(href);
-      if (!target) return;
+    window.setTimeout(
+      () => {
+        const target = document.querySelector<HTMLElement>(href);
+        if (!target) return;
 
-      window.history.pushState(null, "", href);
-      target.scrollIntoView({
-        behavior: reduceMotion ? "auto" : "smooth",
-        block: "start",
-      });
-    }, open ? 120 : 0);
+        window.history.pushState(null, "", href);
+        target.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start",
+        });
+      },
+      open ? 120 : 0,
+    );
   };
 
   return (
@@ -179,7 +178,11 @@ function Header() {
         <Wordmark />
         <nav className="desktop-nav" aria-label="Primary navigation">
           {navLinks.map(([label, href]) => (
-            <a key={href} href={href} onClick={(event) => navigateToSection(event, href)}>
+            <a
+              key={href}
+              href={href}
+              onClick={(event) => navigateToSection(event, href)}
+            >
               {label}
             </a>
           ))}
@@ -201,11 +204,17 @@ function Header() {
             </Dialog.Trigger>
             <Dialog.Portal>
               <Dialog.Overlay className="dialog-overlay" />
-              <Dialog.Content className="mobile-nav-panel" aria-describedby={undefined}>
+              <Dialog.Content
+                className="mobile-nav-panel"
+                aria-describedby={undefined}
+              >
                 <div className="mobile-nav-top">
                   <Dialog.Title>Navigate NSoC</Dialog.Title>
                   <Dialog.Close asChild>
-                    <button className="icon-button" aria-label="Close navigation">
+                    <button
+                      className="icon-button"
+                      aria-label="Close navigation"
+                    >
                       <X size={20} />
                     </button>
                   </Dialog.Close>
@@ -213,7 +222,10 @@ function Header() {
                 <nav aria-label="Mobile navigation">
                   {navLinks.map(([label, href], index) => (
                     <Dialog.Close asChild key={href}>
-                      <a href={href} onClick={(event) => navigateToSection(event, href)}>
+                      <a
+                        href={href}
+                        onClick={(event) => navigateToSection(event, href)}
+                      >
                         <span>0{index + 1}</span>
                         {label}
                         <ArrowRight size={18} />
@@ -249,22 +261,36 @@ function BorealisCore() {
       <div className="stage-grid" aria-hidden="true" />
       <motion.div
         className="aurora aurora--one"
-        animate={reduceMotion ? undefined : { rotate: [0, 8, -4, 0], scale: [1, 1.08, 0.96, 1] }}
+        animate={
+          reduceMotion
+            ? undefined
+            : { rotate: [0, 8, -4, 0], scale: [1, 1.08, 0.96, 1] }
+        }
         transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
         aria-hidden="true"
       />
       <motion.div
         className="aurora aurora--two"
-        animate={reduceMotion ? undefined : { rotate: [0, -12, 5, 0], scale: [1, 0.93, 1.1, 1] }}
+        animate={
+          reduceMotion
+            ? undefined
+            : { rotate: [0, -12, 5, 0], scale: [1, 0.93, 1.1, 1] }
+        }
         transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
         aria-hidden="true"
       />
-      <div className="orbit orbit--outer" aria-hidden="true"><span className="satellite satellite--one" /></div>
-      <div className="orbit orbit--middle" aria-hidden="true"><span className="satellite satellite--two" /></div>
+      <div className="orbit orbit--outer" aria-hidden="true">
+        <span className="satellite satellite--one" />
+      </div>
+      <div className="orbit orbit--middle" aria-hidden="true">
+        <span className="satellite satellite--two" />
+      </div>
       <div className="orbit orbit--inner" aria-hidden="true" />
       <motion.div
         className="mascot-core"
-        animate={reduceMotion ? undefined : { y: [0, -10, 0], rotate: [0, -1.5, 1, 0] }}
+        animate={
+          reduceMotion ? undefined : { y: [0, -10, 0], rotate: [0, -1.5, 1, 0] }
+        }
         transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
       >
         <motion.div
@@ -336,7 +362,9 @@ function BorealisCore() {
         <span>HOVER TO SAY HI</span>
         <span>OPEN SOURCE / ACTIVE</span>
       </div>
-      <div className="stage-label stage-label--bottom"><Snowflake size={12} /> BUILT FOR THE COLD</div>
+      <div className="stage-label stage-label--bottom">
+        <Snowflake size={12} /> BUILT FOR THE COLD
+      </div>
     </motion.div>
   );
 }
@@ -355,8 +383,9 @@ function Hero() {
           <span>Start contributing.</span>
         </h1>
         <p>
-          This winter, trade one tutorial tab for a real codebase. Pick an issue, meet the
-          people behind it, and learn what it feels like to get your work merged.
+          This winter, trade one tutorial tab for a real codebase. Pick an
+          issue, meet the people behind it, and learn what it feels like to get
+          your work merged.
         </p>
         <div className="hero-actions">
           <Button asChild>
@@ -378,7 +407,11 @@ function Hero() {
         </div>
       </div>
       <BorealisCore />
-      <a className="scroll-cue" href="#signal" aria-label="Scroll to program snapshot">
+      <a
+        className="scroll-cue"
+        href="#signal"
+        aria-label="Scroll to program snapshot"
+      >
         <span>SEE HOW THE SEASON WORKS</span>
         <ArrowDown size={14} />
       </a>
@@ -461,7 +494,8 @@ function About() {
         <div className="manifesto-quote reveal-line">
           <span className="quote-mark">“</span>
           <p>
-            Your first PR doesn’t need to be brilliant. It needs to be <em>open.</em>
+            Your first PR doesn’t need to be brilliant. It needs to be{" "}
+            <em>open.</em>
           </p>
           <div className="commit-chip">
             <GitMerge size={15} /> merge: proof-of-work
@@ -490,7 +524,10 @@ function About() {
 function Pathways() {
   const activeRole = useExperienceStore((state) => state.activeRole);
   const setActiveRole = useExperienceStore((state) => state.setActiveRole);
-  const role = useMemo(() => roles.find((item) => item.id === activeRole) ?? roles[0], [activeRole]);
+  const role = useMemo(
+    () => roles.find((item) => item.id === activeRole) ?? roles[0],
+    [activeRole],
+  );
   const Icon = role.icon;
 
   return (
@@ -508,7 +545,11 @@ function Pathways() {
         copy="Contribute code, open your project, or build the community around it. Pick the role that matches how you want to create impact."
       />
       <div className="role-console reveal-line">
-        <div className="role-tabs" role="tablist" aria-label="Participation paths">
+        <div
+          className="role-tabs"
+          role="tablist"
+          aria-label="Participation paths"
+        >
           {roles.map((item) => {
             const TabIcon = item.icon;
             const active = item.id === activeRole;
@@ -630,7 +671,10 @@ function Rewards() {
               key={reward.rank}
               type="single"
               collapsible
-              className={cn("reward-card reveal-line", reward.featured && "reward-card--featured")}
+              className={cn(
+                "reward-card reveal-line",
+                reward.featured && "reward-card--featured",
+              )}
             >
               <Accordion.Item value="details">
                 <Accordion.Header>
@@ -690,7 +734,9 @@ function Timeline() {
         <ol>
           {timeline.map((item, index) => (
             <li key={item.title}>
-              <div className="timeline-index">{String(index + 1).padStart(2, "0")}</div>
+              <div className="timeline-index">
+                {String(index + 1).padStart(2, "0")}
+              </div>
               <div className="timeline-marker">
                 <span />
               </div>
@@ -722,7 +768,12 @@ function PartnerNetwork() {
       />
       <div className="sponsor-grid">
         {sponsors.map((sponsor, index) => (
-          <a href={sponsor.url} target="_blank" rel="noreferrer" key={sponsor.name}>
+          <a
+            href={sponsor.url}
+            target="_blank"
+            rel="noreferrer"
+            key={sponsor.name}
+          >
             <span>SPONSOR / 0{index + 1}</span>
             <strong>{sponsor.name}</strong>
             <MoveUpRight size={17} />
@@ -751,11 +802,16 @@ function SponsorDialog() {
   } = useForm<SponsorForm>({ resolver: zodResolver(sponsorSchema) });
 
   const onSubmit = (values: SponsorForm) => {
-    const subject = encodeURIComponent(`NSoC Winter sponsorship — ${values.company}`);
+    const subject = encodeURIComponent(
+      `NSoC Winter sponsorship — ${values.company}`,
+    );
     const body = encodeURIComponent(
       `Company / community: ${values.company}\nContact: ${values.email}\n\n${values.message}`,
     );
-    window.open(`mailto:connect.nsoc@gmail.com?subject=${subject}&body=${body}`, "_self");
+    window.open(
+      `mailto:connect.nsoc@gmail.com?subject=${subject}&body=${body}`,
+      "_self",
+    );
     reset();
     setOpen(false);
   };
@@ -769,20 +825,27 @@ function SponsorDialog() {
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
-        <Dialog.Content className="sponsor-dialog" aria-describedby="sponsor-description">
+        <Dialog.Content
+          className="sponsor-dialog"
+          aria-describedby="sponsor-description"
+        >
           <div className="dialog-head">
             <div>
               <span>OPEN A CHANNEL</span>
               <Dialog.Title>Support the winter edition.</Dialog.Title>
             </div>
             <Dialog.Close asChild>
-              <button className="icon-button" aria-label="Close sponsorship form">
+              <button
+                className="icon-button"
+                aria-label="Close sponsorship form"
+              >
                 <X size={20} />
               </button>
             </Dialog.Close>
           </div>
           <Dialog.Description id="sponsor-description">
-            Share a little context. Submitting opens a pre-filled email to the NSoC team.
+            Share a little context. Submitting opens a pre-filled email to the
+            NSoC team.
           </Dialog.Description>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <label>
@@ -792,12 +855,19 @@ function SponsorDialog() {
             </label>
             <label>
               Work email
-              <input type="email" placeholder="you@company.com" {...register("email")} />
+              <input
+                type="email"
+                placeholder="you@company.com"
+                {...register("email")}
+              />
               {errors.email ? <small>{errors.email.message}</small> : null}
             </label>
             <label>
               How would you like to collaborate?
-              <textarea placeholder="Tell the team what you have in mind…" {...register("message")} />
+              <textarea
+                placeholder="Tell the team what you have in mind…"
+                {...register("message")}
+              />
               {errors.message ? <small>{errors.message.message}</small> : null}
             </label>
             <Button type="submit">
@@ -831,36 +901,6 @@ function FinalCta() {
         <SponsorDialog />
       </div>
     </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="site-footer">
-      <div className="footer-main">
-        <Wordmark />
-        <p>
-          Learn in public. Contribute with intent.
-          <br />
-          Leave the codebase better than you found it.
-        </p>
-        <div className="footer-socials">
-          {socialLinks.map((link) => (
-            <a key={link.label} href={link.url} target="_blank" rel="noreferrer">
-              {link.label} <MoveUpRight size={13} />
-            </a>
-          ))}
-          <a href="https://github.com/Raghav7-tech/NSOC-Winter-" target="_blank" rel="noreferrer">
-            GitHub <GitFork size={13} />
-          </a>
-        </div>
-      </div>
-      <div className="footer-bottom">
-        <span>© NSoC</span>
-        <span>BUILT FOR THE OPEN-SOURCE WINTER</span>
-        <a href="mailto:connect.nsoc@gmail.com">connect.nsoc@gmail.com</a>
-      </div>
-    </footer>
   );
 }
 
@@ -910,7 +950,11 @@ export function Landing() {
   };
 
   return (
-    <div className="site-shell" ref={shellRef} onPointerMove={handlePointerMove}>
+    <div
+      className="site-shell"
+      ref={shellRef}
+      onPointerMove={handlePointerMove}
+    >
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
