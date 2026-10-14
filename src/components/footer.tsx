@@ -207,21 +207,21 @@ export default function Footer() {
       <div aria-hidden="true" className="nsoc-footer__dots" />
 
       <div className="nsoc-footer__inner mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 pt-14 pb-10 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]">
+        <div className="grid gap-12 pt-14 pb-5 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]">
           <div>
             <a href="#top" className="inline-flex items-center gap-3">
               <Image
                 src="/nsoc-logo-light.webp"
                 alt="NSoC logo"
-                width={42}
-                height={42}
+                width={152}
+                height={152}
                 className="h-10 w-10 object-contain dark:hidden"
               />
               <Image
                 src="/nsoc-logo-dark.webp"
                 alt="NSoC logo"
-                width={42}
-                height={42}
+                width={152}
+                height={152}
                 className="hidden h-10 w-10 object-contain dark:block"
               />
               <div>
