@@ -26,8 +26,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
 import Footer from "@/components/footer";
+import { Button } from "@/components/ui/button";
 import {
   partners,
   rewards,
@@ -39,7 +39,7 @@ import {
   workflow,
 } from "@/lib/data";
 import { useExperienceStore } from "@/lib/store";
-import { cn } from "@/lib/utils";";
+import { cn } from "@/lib/utils";
 type Stat = { value: string; label: string; suffix: string };
 
 const sponsorSchema = z.object({
