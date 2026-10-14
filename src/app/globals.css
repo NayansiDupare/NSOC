@@ -2190,3 +2190,144 @@ textarea:focus-visible {
     background-position: 200% center;
   }
 }
+.nsoc-footer {
+  position: relative;
+  z-index: 0;
+
+  min-height: min(100svh, 780px);
+
+  color: #eaf8ff;
+
+  background:
+    radial-gradient(
+      circle at 50% 80%,
+      rgba(34, 211, 238, 0.16),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(14, 165, 233, 0.08),
+      transparent 30%
+    ),
+    linear-gradient(180deg, #04111f 0%, #061827 50%, #020b14 100%);
+
+  overflow: hidden;
+}
+
+/* subtle dotted atmosphere */
+.nsoc-footer__dots {
+  position: absolute;
+  inset: 0;
+  opacity: 0.22;
+
+  background-image: radial-gradient(
+    circle,
+    rgb(14 165 233 / 0.25) 1px,
+    transparent 1px
+  );
+
+  background-size: 26px 26px;
+
+  mask-image: linear-gradient(to bottom, transparent 20%, black 100%);
+}
+
+/* giant NSOC */
+.nsoc-footer__giant {
+  position: absolute;
+  left: 0;
+  right: 0;
+
+  bottom: 95px;
+
+  z-index: 1;
+
+  display: flex;
+  justify-content: center;
+
+  pointer-events: none;
+  user-select: none;
+
+  overflow: hidden;
+}
+
+.nsoc-footer__giant-text {
+  display: block;
+
+  font-family: var(--font-display);
+  font-size: clamp(10rem, min(28vw, 42svh), 26rem);
+  font-weight: 400;
+
+  line-height: 0.78;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+
+.nsoc-footer__giant-text--outline {
+  color: transparent;
+
+  -webkit-text-stroke: 1.5px rgba(103, 232, 249, 0.48);
+
+  filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.12));
+}
+
+.nsoc-footer__giant-text--solid {
+  position: absolute;
+  inset: 0;
+
+  color: rgba(34, 211, 238, 0.22);
+
+  text-shadow: 0 0 35px rgba(34, 211, 238, 0.13);
+}
+/* curved winter horizon */
+.nsoc-footer__horizon {
+  position: absolute;
+
+  z-index: 2;
+
+  left: 50%;
+  bottom: -4700px;
+
+  width: max(5200px, 420vw);
+  height: 4800px;
+
+  transform: translateX(-50%);
+
+  border-radius: 50% 50% 0 0;
+
+  background: radial-gradient(
+    closest-side,
+    var(--background) 98.5%,
+    rgb(14 165 233 / 0.3) 99%,
+    rgb(34 211 238 / 0.55) 100%
+  );
+
+  box-shadow: 0 -8px 35px rgb(34 211 238 / 0.12);
+}
+
+/* mobile: footer becomes normal flow */
+@media (max-width: 899px) {
+  .nsoc-footer {
+    position: relative;
+    min-height: auto;
+  }
+
+  .nsoc-footer__giant {
+    bottom: 90px;
+  }
+
+  .nsoc-footer__giant-text {
+    font-size: clamp(8rem, 48vw, 15rem);
+  }
+
+  .nsoc-footer__horizon {
+    width: max(2400px, 620vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nsoc-footer *,
+  .nsoc-footer *::before,
+  .nsoc-footer *::after {
+    scroll-behavior: auto !important;
+  }
+}
