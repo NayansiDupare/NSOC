@@ -10,12 +10,7 @@ import {
   type MotionValue,
 } from "motion/react";
 import Image from "next/image";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type RefObject,
-} from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 
 import {
   FaDiscord,
@@ -69,8 +64,7 @@ const footerSections = [
 const HIDDEN_PCT = 22;
 const RISE_PCT = 14;
 
-const clamp01 = (value: number) =>
-  value < 0 ? 0 : value > 1 ? 1 : value;
+const clamp01 = (value: number) => (value < 0 ? 0 : value > 1 ? 1 : value);
 
 const ramp = (progress: number, from: number, to: number) =>
   clamp01((progress - from) / Math.max(0.0001, to - from));
@@ -106,20 +100,15 @@ function useFooterArrival(
     const measure = () => {
       const footerHeight = Math.max(1, footer.offsetHeight);
       const viewportHeight = window.innerHeight;
-
-      // Keep the desktop footer in sticky curtain mode even when its measured
-      // height is a few pixels taller than the viewport. On smaller screens we
-      // fall back to normal flow so the whole footer remains reachable.
-      const isSmallScreen = window.innerWidth < 900;
-      const tooTall = isSmallScreen && footerHeight > viewportHeight;
+      const isMobile = window.innerWidth < 900;
+      const tooTall = footerHeight > viewportHeight;
 
       setFlow(tooTall);
 
       const curtain =
         !tooTall &&
-        getComputedStyle(footer)
-          .getPropertyValue("--footer-curtain")
-          .trim() === "1";
+        getComputedStyle(footer).getPropertyValue("--footer-curtain").trim() ===
+          "1";
 
       const maxScroll = Math.max(
         0,
@@ -149,10 +138,7 @@ function useFooterArrival(
         const uncoverEnd = (footerHeight - giantTop) / footerHeight;
 
         fillFrom.set(
-          Math.min(
-            0.7,
-            uncoverStart + 0.35 * (uncoverEnd - uncoverStart),
-          ),
+          Math.min(0.7, uncoverStart + 0.35 * (uncoverEnd - uncoverStart)),
         );
         fillTo.set(0.97);
       } else {
@@ -178,8 +164,7 @@ function useFooterArrival(
 
   const progress = useTransform(
     [scrollY, start, length],
-    ([scroll, from, distance]: number[]) =>
-      clamp01((scroll - from) / distance),
+    ([scroll, from, distance]: number[]) => clamp01((scroll - from) / distance),
   );
 
   const fill = useTransform(
@@ -346,19 +331,30 @@ export default function Footer() {
 
       <div ref={giantRef} aria-hidden="true" className="nsoc-footer__giant">
         <motion.div
-          className="nsoc-footer__giant-rise"
+          className="nsoc-footer__giant-rise nsoc-footer__giant-graphic"
           style={reduceMotion ? undefined : { y: wordmarkY }}
         >
-          <span className="nsoc-footer__giant-text nsoc-footer__giant-text--outline">
-            NSOC
-          </span>
+          <Image
+            src="/outline3.png"
+            alt=""
+            width={200}
+            height={200}
+            className="nsoc-footer__giant-image nsoc-footer__giant-image--outline"
+            priority
+          />
 
-          <motion.span
-            className="nsoc-footer__giant-text nsoc-footer__giant-text--solid"
+          <motion.div
+            className="nsoc-footer__giant-fill-mask"
             style={reduceMotion ? undefined : { clipPath: fillClip }}
           >
-            NSOC
-          </motion.span>
+            <Image
+              src="/outline2.png"
+              alt=""
+              width={200}
+              height={200}
+              className="nsoc-footer__giant-image nsoc-footer__giant-image--solid"
+            />
+          </motion.div>
         </motion.div>
       </div>
 
