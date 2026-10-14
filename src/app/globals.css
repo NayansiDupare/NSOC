@@ -2235,34 +2235,41 @@ textarea:focus-visible {
 
 .nsoc-footer__dots {
   position: absolute;
-  inset: 0;
-  z-index: 0;
 
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 58%;
+
+  z-index: 0;
   pointer-events: none;
 
-  opacity: 0.48;
+  opacity: 0.68;
 
   background-image: radial-gradient(
     circle,
-    rgba(103, 232, 249, 0.2) 1px,
-    transparent 1.15px
+    rgba(103, 232, 249, 0.28) 1.1px,
+    transparent 1.3px
   );
 
-  background-size: 13px 13px;
+  background-size: 12px 12px;
 
   -webkit-mask-image: linear-gradient(
     to bottom,
-    transparent 8%,
-    rgba(0, 0, 0, 0.35) 24%,
-    #000 58%,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 18%,
+    rgba(0, 0, 0, 0.75) 38%,
+    #000 65%,
     #000 100%
   );
 
   mask-image: linear-gradient(
     to bottom,
-    transparent 8%,
-    rgba(0, 0, 0, 0.35) 24%,
-    #000 58%,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 18%,
+    rgba(0, 0, 0, 0.75) 38%,
+    #000 65%,
     #000 100%
   );
 }
@@ -2273,7 +2280,6 @@ textarea:focus-visible {
   min-height: 100vh;
   background: var(--page-background, var(--paper));
 }
-
 
 .nsoc-footer__inner {
   position: relative;
@@ -2350,9 +2356,9 @@ textarea:focus-visible {
   pointer-events: none;
 
   background: #020711;
-  border-top: 1px solid rgba(103, 232, 249, 0.78);
+  border-top: 1px solid rgba(103, 232, 249, 0.68);
   box-shadow:
-    0 -3px 18px rgba(34, 211, 238, 0.22),
+    0 -100px 100px rgba(34, 211, 238, 0.22),
     0 -15px 75px rgba(14, 165, 233, 0.1);
 }
 
