@@ -2191,64 +2191,42 @@ textarea:focus-visible {
   }
 }
 .nsoc-footer {
-  position: relative;
-  z-index: 2;
-  min-height: min(100svh, 780px);
-  color: #eaf8ff;
-  background:
-    radial-gradient(circle at 50% 82%, rgba(34, 211, 238, 0.16), transparent 34%),
-    radial-gradient(circle at 18% 18%, rgba(14, 165, 233, 0.09), transparent 30%),
-    linear-gradient(180deg, #04111f 0%, #061827 48%, #020b14 100%);
-  overflow: clip;
-  isolation: isolate;
-}
+  position: sticky;
+  bottom: 0;
+  z-index: 0;
 
+  min-height: min(100svh, 780px);
+  overflow: clip;
+}
+.page-shell {
+  position: relative;
+  z-index: 10;
+
+  min-height: 100vh;
+  background: var(--page-background);
+}
 .nsoc-footer__dots {
   position: absolute;
   inset: 0;
   z-index: 0;
   opacity: 0.24;
-  background-image: radial-gradient(circle, rgba(103, 232, 249, 0.28) 1px, transparent 1px);
+  background-image: radial-gradient(
+    circle,
+    rgba(103, 232, 249, 0.28) 1px,
+    transparent 1px
+  );
   background-size: 28px 28px;
   -webkit-mask-image: linear-gradient(to bottom, transparent 8%, #000 100%);
   mask-image: linear-gradient(to bottom, transparent 8%, #000 100%);
   pointer-events: none;
 }
 
-.nsoc-footer__giant {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 88px;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-  pointer-events: none;
-  user-select: none;
-}
+.page-shell {
+  position: relative;
+  z-index: 10;
 
-.nsoc-footer__giant-text {
-  display: block;
-  font-family: var(--font-display);
-  font-size: clamp(10rem, min(28vw, 42svh), 26rem);
-  font-weight: 400;
-  line-height: 0.78;
-  letter-spacing: -0.045em;
-  white-space: nowrap;
-}
-
-.nsoc-footer__giant-text--outline {
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(103, 232, 249, 0.52);
-  filter: drop-shadow(0 0 14px rgba(34, 211, 238, 0.14));
-}
-
-.nsoc-footer__giant-text--solid {
-  position: absolute;
-  inset: 0;
-  color: rgba(34, 211, 238, 0.25);
-  text-shadow: 0 0 42px rgba(34, 211, 238, 0.16);
+  min-height: 100vh;
+  background: var(--page-background);
 }
 
 .nsoc-footer__horizon {

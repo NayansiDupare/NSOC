@@ -5,6 +5,7 @@ import {
   motion,
   useReducedMotion,
   useScroll,
+  useSpring,
   useTransform,
 } from "motion/react";
 import Image from "next/image";
@@ -20,7 +21,11 @@ import {
 } from "react-icons/fa6";
 
 const socialLinks = [
-  { name: "Discord", href: "https://discord.gg/bZ47fac2jn", icon: FaDiscord },
+  {
+    name: "Discord",
+    href: "https://discord.gg/bZ47fac2jn",
+    icon: FaDiscord,
+  },
   {
     name: "WhatsApp",
     href: "https://chat.whatsapp.com/Cs6bcCYUD5zLXmElzX9HOq",
@@ -61,21 +66,26 @@ export default function Footer() {
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 92%", "end 78%"],
+    offset: ["start end", "end end"],
   });
 
-  // The wordmark rises slightly as the footer enters the viewport.
-  const wordmarkY = useTransform(scrollYProgress, [0, 1], ["18%", "0%"]);
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 24,
+    mass: 0.45,
+  });
 
-  // Solid text is revealed bottom -> top.
+  const wordmarkY = useTransform(smoothProgress, [0, 1], ["18%", "0%"]);
+
+  const outlineOpacity = useTransform(smoothProgress, [0, 0.22], [0.15, 1]);
+
   const fillClip = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0.18, 0.92],
     ["inset(100% 0% 0% 0%)", "inset(0% 0% 0% 0%)"],
   );
 
-  // Outline appears first, before the solid fill catches up.
-  const outlineOpacity = useTransform(scrollYProgress, [0.02, 0.2], [0, 1]);
+  const glowOpacity = useTransform(smoothProgress, [0.15, 0.8], [0.1, 0.95]);
 
   const backToTop = () => {
     window.scrollTo({
@@ -210,14 +220,24 @@ export default function Footer() {
           className="relative"
           style={reduceMotion ? undefined : { y: wordmarkY }}
         >
+          {/* Outline */}
           <motion.span
             style={reduceMotion ? undefined : { opacity: outlineOpacity }}
             className="nsoc-footer__giant-text nsoc-footer__giant-text--outline"
           >
             NSOC
           </motion.span>
+
+          {/* Bottom → top fill */}
           <motion.span
-            style={reduceMotion ? undefined : { clipPath: fillClip }}
+            style={
+              reduceMotion
+                ? undefined
+                : {
+                    clipPath: fillClip,
+                    opacity: glowOpacity,
+                  }
+            }
             className="nsoc-footer__giant-text nsoc-footer__giant-text--solid"
           >
             NSOC
