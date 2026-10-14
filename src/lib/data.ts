@@ -4,14 +4,19 @@ import {
   CircleDotDashed,
   Code2,
   Crown,
+  Flag,
   GitMerge,
+  GitPullRequest,
   GraduationCap,
+  LockKeyhole,
   Medal,
+  Megaphone,
   Network,
   Orbit,
   ShieldCheck,
   Sparkles,
   Trophy,
+  UserPlus,
 } from "lucide-react";
 
 export const stats = [
@@ -181,11 +186,48 @@ export const rewards = [
 ] as const;
 
 export const timeline = [
-  { date: "OCT 01", title: "Registration opens", state: "OPEN" },
-  { date: "OCT 12", title: "Projects announced", state: "DISCOVER" },
-  { date: "OCT 15", title: "Contribution period begins", state: "BUILD" },
-  { date: "TBD", title: "Registrations close", state: "LOCK" },
-  { date: "DEC 30", title: "Program ends", state: "SHIP" },
+  {
+    date: "October 1, 2026",
+    dateTime: "2026-10-01",
+    title: "Registration Opens",
+    description: "Registrations open on October 1. Anyone can create a profile and join the program.",
+    icon: UserPlus,
+  },
+  {
+    date: "October 12, 2026",
+    dateTime: "2026-10-12",
+    title: "Projects Announced",
+    description: "Every approved project is published and ready for contributors to explore.",
+    icon: Megaphone,
+  },
+  {
+    date: "October 15, 2026",
+    dateTime: "2026-10-15",
+    title: "Contribution Period Begins",
+    description: "Contributors choose their issues, meet their maintainers, and start building.",
+    icon: GitPullRequest,
+  },
+  {
+    date: "To Be Declared",
+    dateTime: undefined,
+    title: "Registrations Close",
+    description: "The final deadline for new participant registrations will be announced soon.",
+    icon: LockKeyhole,
+  },
+  {
+    date: "December 30, 2026",
+    dateTime: "2026-12-30",
+    title: "Program Ends",
+    description: "The contribution period closes and all final submissions are due.",
+    icon: Flag,
+  },
+  {
+    date: "January 15, 2027",
+    dateTime: "2027-01-15",
+    title: "Results Announced",
+    description: "Winners and top contributors are recognised as the final results go live.",
+    icon: Trophy,
+  },
 ] as const;
 
 export const sponsors = [
