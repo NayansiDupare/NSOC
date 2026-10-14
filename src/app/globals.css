@@ -2192,71 +2192,47 @@ textarea:focus-visible {
 }
 .nsoc-footer {
   position: relative;
-  z-index: 0;
-
+  z-index: 2;
   min-height: min(100svh, 780px);
-
   color: #eaf8ff;
-
   background:
-    radial-gradient(
-      circle at 50% 80%,
-      rgba(34, 211, 238, 0.16),
-      transparent 34%
-    ),
-    radial-gradient(
-      circle at 20% 20%,
-      rgba(14, 165, 233, 0.08),
-      transparent 30%
-    ),
-    linear-gradient(180deg, #04111f 0%, #061827 50%, #020b14 100%);
-
-  overflow: hidden;
+    radial-gradient(circle at 50% 82%, rgba(34, 211, 238, 0.16), transparent 34%),
+    radial-gradient(circle at 18% 18%, rgba(14, 165, 233, 0.09), transparent 30%),
+    linear-gradient(180deg, #04111f 0%, #061827 48%, #020b14 100%);
+  overflow: clip;
+  isolation: isolate;
 }
 
-/* subtle dotted atmosphere */
 .nsoc-footer__dots {
   position: absolute;
   inset: 0;
-  opacity: 0.22;
-
-  background-image: radial-gradient(
-    circle,
-    rgb(14 165 233 / 0.25) 1px,
-    transparent 1px
-  );
-
-  background-size: 26px 26px;
-
-  mask-image: linear-gradient(to bottom, transparent 20%, black 100%);
+  z-index: 0;
+  opacity: 0.24;
+  background-image: radial-gradient(circle, rgba(103, 232, 249, 0.28) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 8%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 8%, #000 100%);
+  pointer-events: none;
 }
 
-/* giant NSOC */
 .nsoc-footer__giant {
   position: absolute;
   left: 0;
   right: 0;
-
-  bottom: 95px;
-
+  bottom: 88px;
   z-index: 1;
-
   display: flex;
   justify-content: center;
-
+  overflow: hidden;
   pointer-events: none;
   user-select: none;
-
-  overflow: hidden;
 }
 
 .nsoc-footer__giant-text {
   display: block;
-
   font-family: var(--font-display);
   font-size: clamp(10rem, min(28vw, 42svh), 26rem);
   font-weight: 400;
-
   line-height: 0.78;
   letter-spacing: -0.045em;
   white-space: nowrap;
@@ -2264,55 +2240,45 @@ textarea:focus-visible {
 
 .nsoc-footer__giant-text--outline {
   color: transparent;
-
-  -webkit-text-stroke: 1.5px rgba(103, 232, 249, 0.48);
-
-  filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.12));
+  -webkit-text-stroke: 1.5px rgba(103, 232, 249, 0.52);
+  filter: drop-shadow(0 0 14px rgba(34, 211, 238, 0.14));
 }
 
 .nsoc-footer__giant-text--solid {
   position: absolute;
   inset: 0;
-
-  color: rgba(34, 211, 238, 0.22);
-
-  text-shadow: 0 0 35px rgba(34, 211, 238, 0.13);
+  color: rgba(34, 211, 238, 0.25);
+  text-shadow: 0 0 42px rgba(34, 211, 238, 0.16);
 }
-/* curved winter horizon */
+
 .nsoc-footer__horizon {
   position: absolute;
-
   z-index: 2;
-
   left: 50%;
   bottom: -4700px;
-
   width: max(5200px, 420vw);
   height: 4800px;
-
   transform: translateX(-50%);
-
   border-radius: 50% 50% 0 0;
-
   background: radial-gradient(
     closest-side,
-    var(--background) 98.5%,
-    rgb(14 165 233 / 0.3) 99%,
-    rgb(34 211 238 / 0.55) 100%
+    #020b14 98.45%,
+    rgba(14, 165, 233, 0.74) 99.05%,
+    rgba(103, 232, 249, 0.92) 100%
   );
-
-  box-shadow: 0 -8px 35px rgb(34 211 238 / 0.12);
+  box-shadow:
+    0 -5px 34px rgba(34, 211, 238, 0.18),
+    0 -14px 90px rgba(14, 165, 233, 0.08);
+  pointer-events: none;
 }
 
-/* mobile: footer becomes normal flow */
 @media (max-width: 899px) {
   .nsoc-footer {
-    position: relative;
     min-height: auto;
   }
 
   .nsoc-footer__giant {
-    bottom: 90px;
+    bottom: 96px;
   }
 
   .nsoc-footer__giant-text {
@@ -2325,9 +2291,11 @@ textarea:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nsoc-footer *,
-  .nsoc-footer *::before,
-  .nsoc-footer *::after {
-    scroll-behavior: auto !important;
+  .nsoc-footer__giant-text--outline {
+    opacity: 1 !important;
+  }
+
+  .nsoc-footer__giant-text--solid {
+    clip-path: inset(0 0 0 0) !important;
   }
 }
