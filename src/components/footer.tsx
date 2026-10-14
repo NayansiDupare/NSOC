@@ -70,7 +70,6 @@ const ramp = (progress: number, from: number, to: number) =>
   clamp01((progress - from) / Math.max(0.0001, to - from));
 
 type FooterArrival = {
-  progress: MotionValue<number>;
   fill: MotionValue<number>;
   flow: boolean;
 };
@@ -101,7 +100,7 @@ function useFooterArrival(
       const footerHeight = Math.max(1, footer.offsetHeight);
       const viewportHeight = window.innerHeight;
       const isMobile = window.innerWidth < 900;
-      const tooTall = footerHeight > viewportHeight;
+      const tooTall = isMobile && footerHeight > viewportHeight;
 
       setFlow(tooTall);
 
@@ -172,7 +171,7 @@ function useFooterArrival(
     ([value, from, to]: number[]) => ramp(value, from, to),
   );
 
-  return { progress, fill, flow };
+  return { fill, flow };
 }
 
 export default function Footer() {

@@ -2164,59 +2164,25 @@ textarea:focus-visible {
   }
 }
 
-.shine-text {
-  background: linear-gradient(
-    120deg,
-    #22d3ee 0%,
-    #67e8f9 35%,
-    #ffffff 50%,
-    #67e8f9 65%,
-    #22d3ee 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: footer-shine 4s linear infinite;
-  filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.35));
-}
-
-.outline-glow {
-  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.22))
-    drop-shadow(0 0 24px rgba(34, 211, 238, 0.12));
-}
-
-@keyframes footer-shine {
-  to {
-    background-position: 200% center;
-  }
-}
 
 /* ==========================
    PARALLAX CURTAIN FOOTER
-   Adapted from the reference footer's scroll-arrival model.
    ========================== */
 .nsoc-footer {
   --footer-curtain: 1;
   --footer-rise: 130px;
   --footer-pad-b: 20px;
-  --footer-giant-fs: clamp(12rem, min(30vw, 44svh), 27rem);
-  --footer-stroke: rgba(103, 232, 249, 0.42);
 
   position: sticky;
   bottom: 0;
   z-index: 0;
-
   display: flex;
-  flex-direction: column;
-
   min-height: min(100svh, 760px);
-
+  flex-direction: column;
   padding: clamp(3.5rem, 6vw, 6rem) 0
     calc(var(--footer-pad-b) + env(safe-area-inset-bottom));
-
+  overflow: clip;
   color: #eaf8ff;
-
   background:
     radial-gradient(
       circle at 50% 75%,
@@ -2224,37 +2190,36 @@ textarea:focus-visible {
       transparent 38%
     ),
     linear-gradient(180deg, #04101c 0%, #071927 48%, #020911 100%);
-
-  overflow: clip;
 }
 
-/* If the content cannot fit in the viewport, a sticky curtain would hide its top. */
 .nsoc-footer--flow {
   position: relative;
 }
 
+/* The main page is the opaque curtain that uncovers the sticky footer. */
+.page-shell {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  background: var(--page-background, var(--paper));
+}
+
+/* Dots live only in the lower reveal area and get stronger toward the bottom. */
 .nsoc-footer__dots {
   position: absolute;
-
-  left: 0;
   right: 0;
   bottom: 0;
-
-  height: 58%;
-
+  left: 0;
   z-index: 0;
+  height: 58%;
   pointer-events: none;
-
   opacity: 0.68;
-
   background-image: radial-gradient(
     circle,
     rgba(103, 232, 249, 0.28) 1.1px,
     transparent 1.3px
   );
-
   background-size: 12px 12px;
-
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent 0%,
@@ -2263,7 +2228,6 @@ textarea:focus-visible {
     #000 65%,
     #000 100%
   );
-
   mask-image: linear-gradient(
     to bottom,
     transparent 0%,
@@ -2273,65 +2237,48 @@ textarea:focus-visible {
     #000 100%
   );
 }
-/* The main page is the curtain that covers the footer until it scrolls away. */
-.page-shell {
-  position: relative;
-  z-index: 10;
-  min-height: 100vh;
-  background: var(--page-background, var(--paper));
-}
 
 .nsoc-footer__inner {
   position: relative;
   z-index: 3;
   display: flex;
-  flex: 1 1 auto;
   width: 100%;
+  flex: 1 1 auto;
   flex-direction: column;
 }
 
-/* Giant wordmark: outline is always present; solid fill is clipped bottom -> top. */
+/* Layered footer mark: outline3 stays visible; outline2 is revealed bottom -> top. */
 .nsoc-footer__giant {
   position: absolute;
-  left: 0;
   right: 0;
-  bottom: calc(var(--footer-rise) - 6rem);
-
+  bottom: calc(var(--footer-rise) - 5.75rem);
+  left: 0;
   z-index: 1;
-
   display: flex;
   justify-content: center;
-
   pointer-events: none;
   user-select: none;
 }
 
 .nsoc-footer__giant-rise {
   position: relative;
-
-  width: min(30rem, 42vw);
+  width: min(29rem, 41vw);
   aspect-ratio: 1 / 1;
-
-  will-change: transform;
   transform: translateZ(0);
+  will-change: transform;
 }
 
 .nsoc-footer__giant-image,
 .nsoc-footer__giant-fill-mask {
   position: absolute;
   inset: 0;
-
   width: 100%;
   height: 100%;
 }
 
 .nsoc-footer__giant-image {
-  width: 100%;
-  height: 100%;
-
   object-fit: contain;
   object-position: center;
-
   pointer-events: none;
   user-select: none;
 }
@@ -2340,34 +2287,36 @@ textarea:focus-visible {
   overflow: hidden;
   will-change: clip-path;
 }
+
+/* outline3.png has slightly different transparent bounds than outline2.png. */
 .nsoc-footer__giant-image--outline {
-  opacity: 0.35;
+  opacity: 0.34;
+  transform: translateY(-2.85%) scaleX(1.032) scaleY(1.045);
+  transform-origin: top left;
 }
 
 .nsoc-footer__giant-image--solid {
   opacity: 1;
 }
-/* Reserve the vertical space that the giant wordmark rises into. */
+
 .nsoc-footer__gap {
   flex: 1 0 auto;
   min-height: clamp(10rem, 22vw, 20rem);
 }
 
-/* Dark planet body. Its top edge is the glowing horizon arc. */
+/* Shallow dark planet. The large upward shadow creates the atmospheric glow. */
 .nsoc-footer__horizon {
   position: absolute;
   left: 50%;
   bottom: calc(-560px + var(--footer-rise));
   z-index: 2;
-
   width: max(2600px, 180vw);
   height: 560px;
   transform: translateX(-50%);
+  border-top: 1px solid rgba(103, 232, 249, 0.68);
   border-radius: 50% 50% 0 0;
   pointer-events: none;
-
   background: #020711;
-  border-top: 1px solid rgba(103, 232, 249, 0.68);
   box-shadow:
     0 -100px 100px rgba(34, 211, 238, 0.22),
     0 -15px 75px rgba(14, 165, 233, 0.1);
@@ -2377,14 +2326,14 @@ textarea:focus-visible {
   position: relative;
   z-index: 3;
   display: flex;
-  align-items: flex-end;
   height: calc(var(--footer-rise) - var(--footer-pad-b));
+  align-items: flex-end;
 }
 
 .nsoc-footer__bar {
+  display: grid;
   width: 100%;
   min-height: 44px;
-  display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   column-gap: 1.5rem;
@@ -2414,14 +2363,21 @@ textarea:focus-visible {
   }
 
   .nsoc-footer__gap {
-    min-height: calc(var(--footer-giant-fs) * 0.58 + 1.5rem);
+    min-height: clamp(10rem, 30vw, 16rem);
   }
 }
 
 @media (max-width: 767px) {
   .nsoc-footer {
     --footer-rise: 140px;
-    --footer-giant-fs: clamp(9rem, 54vw, 15rem);
+  }
+
+  .nsoc-footer__giant {
+    bottom: calc(var(--footer-rise) - 4.5rem);
+  }
+
+  .nsoc-footer__giant-rise {
+    width: min(21rem, 68vw);
   }
 
   .nsoc-footer__horizon {
@@ -2449,25 +2405,6 @@ textarea:focus-visible {
   .nsoc-footer__bar > :nth-child(3) {
     grid-area: top;
   }
-  .nsoc-footer__giant {
-    bottom: calc(var(--footer-rise) - 7rem);
-  }
-
-  .nsoc-footer__giant-graphic {
-    width: min(26rem, 88vw);
-  }
-
-  .nsoc-footer__gap {
-    min-height: clamp(10rem, 34vw, 16rem);
-  }
-
-  .nsoc-footer__giant-rise {
-    width: min(22rem, 70vw);
-  }
-
-  .nsoc-footer__giant {
-    bottom: calc(var(--footer-rise) - 4.5rem);
-  }
 }
 
 @media (max-height: 499px) and (orientation: landscape) {
@@ -2479,7 +2416,7 @@ textarea:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nsoc-footer__giant-text--solid {
+  .nsoc-footer__giant-fill-mask {
     clip-path: inset(0 0 0 0) !important;
   }
 }
