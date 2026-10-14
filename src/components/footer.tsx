@@ -106,7 +106,12 @@ function useFooterArrival(
     const measure = () => {
       const footerHeight = Math.max(1, footer.offsetHeight);
       const viewportHeight = window.innerHeight;
-      const tooTall = footerHeight > viewportHeight;
+
+      // Keep the desktop footer in sticky curtain mode even when its measured
+      // height is a few pixels taller than the viewport. On smaller screens we
+      // fall back to normal flow so the whole footer remains reachable.
+      const isSmallScreen = window.innerWidth < 900;
+      const tooTall = isSmallScreen && footerHeight > viewportHeight;
 
       setFlow(tooTall);
 

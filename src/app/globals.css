@@ -77,7 +77,8 @@ button {
   --cursor-x: 50vw;
   --cursor-y: 30vh;
   min-height: 100vh;
-  overflow: clip;
+  overflow-x: clip;
+  overflow-y: visible;
   position: relative;
   background: var(--paper);
 }
@@ -2199,6 +2200,8 @@ textarea:focus-visible {
   --footer-curtain: 1;
   --footer-rise: 130px;
   --footer-pad-b: 20px;
+  --footer-giant-fs: clamp(12rem, min(30vw, 44svh), 27rem);
+  --footer-stroke: rgba(103, 232, 249, 0.42);
 
   position: sticky;
   bottom: 0;
@@ -2271,23 +2274,6 @@ textarea:focus-visible {
   background: var(--page-background, var(--paper));
 }
 
-.nsoc-footer__dots {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.26;
-  pointer-events: none;
-
-  background-image: radial-gradient(
-    circle,
-    rgba(103, 232, 249, 0.26) 1px,
-    transparent 1px
-  );
-  background-size: 24px 24px;
-
-  -webkit-mask-image: linear-gradient(to bottom, transparent 25%, #000 100%);
-  mask-image: linear-gradient(to bottom, transparent 25%, #000 100%);
-}
 
 .nsoc-footer__inner {
   position: relative;
