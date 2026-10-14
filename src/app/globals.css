@@ -2190,178 +2190,233 @@ textarea:focus-visible {
     background-position: 200% center;
   }
 }
+
+
+/* ==========================
+   PARALLAX CURTAIN FOOTER
+   Adapted from the reference footer's scroll-arrival model.
+   ========================== */
 .nsoc-footer {
+  --footer-rise: 130px;
+  --footer-pad-b: 20px;
+  --footer-giant-fs: clamp(12rem, min(30vw, 44svh), 27rem);
+  --footer-stroke: rgba(103, 232, 249, 0.38);
+  --footer-curtain: 1;
+
   position: sticky;
   bottom: 0;
   z-index: 0;
-
-  min-height: min(100svh, 780px);
-
+  display: flex;
+  flex-direction: column;
+  min-height: min(100svh, 760px);
   color: #eaf8ff;
+  overflow: clip;
 
   background:
-    radial-gradient(
-      circle at 50% 78%,
-      rgba(34, 211, 238, 0.14),
-      transparent 34%
-    ),
-    linear-gradient(180deg, #030b16 0%, #061522 45%, #020811 100%);
-
-  overflow: clip;
+    radial-gradient(circle at 50% 76%, rgba(34, 211, 238, 0.13), transparent 34%),
+    radial-gradient(circle at 15% 15%, rgba(14, 165, 233, 0.08), transparent 28%),
+    linear-gradient(180deg, #030812 0%, #061522 48%, #020711 100%);
 }
 
-/* main page covers the footer until it scrolls away */
+/* If the content cannot fit in the viewport, a sticky curtain would hide its top. */
+.nsoc-footer--flow {
+  position: relative;
+}
+
+/* The main page is the curtain that covers the footer until it scrolls away. */
 .page-shell {
   position: relative;
   z-index: 10;
-
   min-height: 100vh;
-  background: var(--page-background);
+  background: var(--page-background, var(--paper));
 }
 
 .nsoc-footer__dots {
   position: absolute;
   inset: 0;
   z-index: 0;
-
-  opacity: 0.24;
+  opacity: 0.26;
+  pointer-events: none;
 
   background-image: radial-gradient(
     circle,
-    rgba(103, 232, 249, 0.28) 1px,
+    rgba(103, 232, 249, 0.26) 1px,
     transparent 1px
   );
+  background-size: 24px 24px;
 
-  background-size: 28px 28px;
-
-  -webkit-mask-image: linear-gradient(to bottom, transparent 8%, #000 100%);
-
-  mask-image: linear-gradient(to bottom, transparent 8%, #000 100%);
-
-  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 25%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 25%, #000 100%);
 }
 
-/* ===========================
-   GIANT NSOC WORDMARK
-   =========================== */
+.nsoc-footer__inner {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  flex-direction: column;
+}
 
+/* Giant wordmark: outline is always present; solid fill is clipped bottom -> top. */
 .nsoc-footer__giant {
   position: absolute;
-
   left: 0;
   right: 0;
-  bottom: 92px;
-
+  bottom: calc(var(--footer-rise) - var(--footer-giant-fs) * 0.17);
   z-index: 1;
-
   display: flex;
   justify-content: center;
-
-  overflow: hidden;
-
+  font-size: var(--footer-giant-fs);
+  line-height: 0.8;
   pointer-events: none;
   user-select: none;
 }
 
-.nsoc-footer__giant > div {
+.nsoc-footer__giant-rise {
   position: relative;
-
   will-change: transform;
   transform: translateZ(0);
 }
 
 .nsoc-footer__giant-text {
   display: block;
-
   font-family: var(--font-display);
-
-  font-size: clamp(10rem, min(29vw, 44svh), 27rem);
-
-  font-weight: 400;
-
-  line-height: 0.78;
-  letter-spacing: -0.045em;
-
+  font-size: inherit;
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.035em;
   white-space: nowrap;
-
   backface-visibility: hidden;
 }
 
 .nsoc-footer__giant-text--outline {
   color: transparent;
-
-  -webkit-text-stroke: 1.25px rgba(103, 232, 249, 0.42);
-
-  filter: drop-shadow(0 0 16px rgba(34, 211, 238, 0.12));
+  -webkit-text-stroke: 1px var(--footer-stroke);
+  filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.08));
 }
 
 .nsoc-footer__giant-text--solid {
   position: absolute;
   inset: 0;
-
-  color: rgba(235, 253, 255, 0.96);
-
-  filter: drop-shadow(0 0 30px rgba(34, 211, 238, 0.18));
-
-  will-change: clip-path, opacity;
+  color: #f2fdff;
+  will-change: clip-path;
+  filter: drop-shadow(0 0 26px rgba(34, 211, 238, 0.12));
 }
 
-/* ===========================
-   HORIZON
-   =========================== */
+/* Reserve the vertical space that the giant wordmark rises into. */
+.nsoc-footer__gap {
+  flex: 1 0 auto;
+  min-height: calc(var(--footer-giant-fs) * 0.58 + 2rem);
+}
 
+/* Dark planet body. Its top edge is the glowing horizon arc. */
 .nsoc-footer__horizon {
   position: absolute;
-
+  left: 50%;
+  bottom: calc(-560px + var(--footer-rise));
   z-index: 2;
 
-  left: 50%;
-  bottom: -4700px;
-
-  width: max(5200px, 420vw);
-  height: 4800px;
-
+  width: max(2600px, 180vw);
+  height: 560px;
   transform: translateX(-50%);
-
   border-radius: 50% 50% 0 0;
-
-  background: radial-gradient(
-    closest-side,
-    #020811 98.45%,
-    rgba(14, 165, 233, 0.74) 99.05%,
-    rgba(103, 232, 249, 0.92) 100%
-  );
-
-  box-shadow:
-    0 -5px 34px rgba(34, 211, 238, 0.18),
-    0 -14px 90px rgba(14, 165, 233, 0.08);
-
   pointer-events: none;
+
+  background: #020711;
+  border-top: 1px solid rgba(103, 232, 249, 0.78);
+  box-shadow:
+    0 -3px 18px rgba(34, 211, 238, 0.22),
+    0 -15px 75px rgba(14, 165, 233, 0.10);
 }
+
+.nsoc-footer__ground {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  height: calc(var(--footer-rise) - var(--footer-pad-b));
+}
+
+.nsoc-footer__bar {
+  width: 100%;
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 1.5rem;
+  padding-bottom: var(--footer-pad-b);
+  color: rgba(203, 225, 235, 0.68);
+  font-size: 0.75rem;
+}
+
+.nsoc-footer__bar > :nth-child(1) {
+  justify-self: start;
+}
+
+.nsoc-footer__bar > :nth-child(2) {
+  justify-self: center;
+  text-align: center;
+}
+
+.nsoc-footer__bar > :nth-child(3) {
+  justify-self: end;
+}
+
 @media (max-width: 899px) {
   .nsoc-footer {
+    --footer-curtain: 0;
     position: relative;
     min-height: auto;
   }
 
-  .nsoc-footer__giant {
-    bottom: 96px;
+  .nsoc-footer__gap {
+    min-height: calc(var(--footer-giant-fs) * 0.58 + 1.5rem);
   }
+}
 
-  .nsoc-footer__giant-text {
-    font-size: clamp(8rem, 48vw, 15rem);
+@media (max-width: 767px) {
+  .nsoc-footer {
+    --footer-rise: 140px;
+    --footer-giant-fs: clamp(9rem, 54vw, 15rem);
   }
 
   .nsoc-footer__horizon {
-    width: max(2400px, 620vw);
+    width: max(2200px, 600vw);
+  }
+
+  .nsoc-footer__bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "stamp top"
+      "legal legal";
+    row-gap: 0.5rem;
+  }
+
+  .nsoc-footer__bar > :nth-child(1) {
+    grid-area: legal;
+  }
+
+  .nsoc-footer__bar > :nth-child(2) {
+    grid-area: stamp;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .nsoc-footer__bar > :nth-child(3) {
+    grid-area: top;
+  }
+}
+
+@media (max-height: 499px) and (orientation: landscape) {
+  .nsoc-footer {
+    --footer-curtain: 0;
+    position: relative;
+    min-height: auto;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nsoc-footer__giant-text--outline {
-    opacity: 1 !important;
-  }
-
   .nsoc-footer__giant-text--solid {
     clip-path: inset(0 0 0 0) !important;
   }

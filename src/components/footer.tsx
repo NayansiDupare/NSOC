@@ -3,13 +3,19 @@
 import { ArrowUp, ArrowUpRight } from "lucide-react";
 import {
   motion,
+  useMotionValue,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
+  type MotionValue,
 } from "motion/react";
 import Image from "next/image";
-import { useRef } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 
 import {
   FaDiscord,
@@ -60,32 +66,141 @@ const footerSections = [
   ["04", "Sponsors", "#sponsors"],
 ] as const;
 
-export default function Footer() {
-  const ref = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
+const HIDDEN_PCT = 22;
+const RISE_PCT = 14;
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end end"],
-  });
+const clamp01 = (value: number) =>
+  value < 0 ? 0 : value > 1 ? 1 : value;
 
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 24,
-    mass: 0.45,
-  });
+const ramp = (progress: number, from: number, to: number) =>
+  clamp01((progress - from) / Math.max(0.0001, to - from));
 
-  const wordmarkY = useTransform(smoothProgress, [0, 1], ["18%", "0%"]);
+type FooterArrival = {
+  progress: MotionValue<number>;
+  fill: MotionValue<number>;
+  flow: boolean;
+};
 
-  const outlineOpacity = useTransform(smoothProgress, [0, 0.22], [0.15, 1]);
+/**
+ * Tracks how much of the sticky footer has actually been uncovered by the page.
+ *
+ * Important: this intentionally uses the global scrollY instead of
+ * useScroll({ target: footerRef }). Sticky positioning changes offsetTop, which
+ * makes target-based progress jump ahead and breaks the curtain animation.
+ */
+function useFooterArrival(
+  footerRef: RefObject<HTMLElement | null>,
+  giantRef: RefObject<HTMLDivElement | null>,
+): FooterArrival {
+  const { scrollY } = useScroll();
+  const start = useMotionValue(Number.POSITIVE_INFINITY);
+  const length = useMotionValue(1);
+  const fillFrom = useMotionValue(0.3);
+  const fillTo = useMotionValue(0.97);
+  const [flow, setFlow] = useState(false);
 
-  const fillClip = useTransform(
-    smoothProgress,
-    [0.18, 0.92],
-    ["inset(100% 0% 0% 0%)", "inset(0% 0% 0% 0%)"],
+  useEffect(() => {
+    const footer = footerRef.current;
+    if (!footer) return;
+
+    const measure = () => {
+      const footerHeight = Math.max(1, footer.offsetHeight);
+      const viewportHeight = window.innerHeight;
+      const tooTall = footerHeight > viewportHeight;
+
+      setFlow(tooTall);
+
+      const curtain =
+        !tooTall &&
+        getComputedStyle(footer)
+          .getPropertyValue("--footer-curtain")
+          .trim() === "1";
+
+      const maxScroll = Math.max(
+        0,
+        document.documentElement.scrollHeight - viewportHeight,
+      );
+
+      if (maxScroll <= 0) {
+        start.set(-1);
+        length.set(1);
+        fillFrom.set(0);
+        fillTo.set(0.5);
+        return;
+      }
+
+      const from = Math.max(0, maxScroll - footerHeight);
+      start.set(from);
+      length.set(Math.max(1, maxScroll - from));
+
+      const giant = giantRef.current;
+      const giantTop = giant ? giant.offsetTop : footerHeight;
+      const giantBottom = giant
+        ? giant.offsetTop + giant.offsetHeight * (1 - HIDDEN_PCT / 100)
+        : footerHeight;
+
+      if (curtain) {
+        const uncoverStart = (footerHeight - giantBottom) / footerHeight;
+        const uncoverEnd = (footerHeight - giantTop) / footerHeight;
+
+        fillFrom.set(
+          Math.min(
+            0.7,
+            uncoverStart + 0.35 * (uncoverEnd - uncoverStart),
+          ),
+        );
+        fillTo.set(0.97);
+      } else {
+        fillFrom.set(Math.min(0.8, giantTop / footerHeight + 0.06));
+        fillTo.set(0.985);
+      }
+    };
+
+    measure();
+
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(document.body);
+    resizeObserver.observe(footer);
+
+    window.addEventListener("resize", measure);
+    document.fonts?.ready.then(measure).catch(() => undefined);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [footerRef, giantRef, start, length, fillFrom, fillTo]);
+
+  const progress = useTransform(
+    [scrollY, start, length],
+    ([scroll, from, distance]: number[]) =>
+      clamp01((scroll - from) / distance),
   );
 
-  const glowOpacity = useTransform(smoothProgress, [0.15, 0.8], [0.1, 0.95]);
+  const fill = useTransform(
+    [progress, fillFrom, fillTo],
+    ([value, from, to]: number[]) => ramp(value, from, to),
+  );
+
+  return { progress, fill, flow };
+}
+
+export default function Footer() {
+  const ref = useRef<HTMLElement>(null);
+  const giantRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion() ?? false;
+  const { fill, flow } = useFooterArrival(ref, giantRef);
+
+  const fillClip = useTransform(
+    fill,
+    (value) =>
+      `inset(${((1 - value) * (100 - HIDDEN_PCT)).toFixed(2)}% 0% 0% 0%)`,
+  );
+
+  const wordmarkY = useTransform(
+    fill,
+    (value) => `${((1 - value) * RISE_PCT).toFixed(2)}%`,
+  );
 
   const backToTop = () => {
     window.scrollTo({
@@ -95,11 +210,15 @@ export default function Footer() {
   };
 
   return (
-    <footer ref={ref} id="site-footer" className="nsoc-footer">
+    <footer
+      ref={ref}
+      id="site-footer"
+      className={flow ? "nsoc-footer nsoc-footer--flow" : "nsoc-footer"}
+    >
       <div aria-hidden="true" className="nsoc-footer__dots" />
 
-      <div className="relative z-10 mx-auto flex min-h-full max-w-7xl flex-col px-6">
-        <div className="grid gap-12 pt-16 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]">
+      <div className="nsoc-footer__inner mx-auto max-w-7xl px-6">
+        <div className="grid gap-12 pt-14 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]">
           <div>
             <a href="#top" className="inline-flex items-center gap-3">
               <Image
@@ -126,13 +245,13 @@ export default function Footer() {
               </div>
             </a>
 
-            <h2 className="mt-7 max-w-xl text-3xl font-bold leading-tight text-white sm:text-4xl">
+            <h2 className="mt-6 max-w-xl text-3xl font-bold leading-tight text-white sm:text-4xl">
               Real projects.
               <span className="block">Real contributors.</span>
               <span className="block text-cyan-400">Real impact.</span>
             </h2>
 
-            <p className="mt-5 max-w-md leading-7 text-slate-300/75">
+            <p className="mt-4 max-w-md leading-7 text-slate-300/75">
               A 45-day open source program where project admins bring real
               codebases and contributors work on meaningful issues that ship to
               production.
@@ -169,6 +288,7 @@ export default function Footer() {
             <div className="mt-5 flex flex-col">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
+
                 return (
                   <a
                     key={social.name}
@@ -190,55 +310,47 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* This space belongs to the footer only and is where the wordmark reveal lives. */}
-        <div className="min-h-[300px] flex-1 sm:min-h-[390px]" />
+        {/* Sky reserved for the rising wordmark. */}
+        <div className="nsoc-footer__gap" aria-hidden="true" />
 
-        <div className="relative z-20 grid min-h-24 items-end gap-4 pb-6 text-xs text-slate-400 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-          <p>© 2026 NSoC. All rights reserved.</p>
-          <p className="hidden uppercase tracking-[0.18em] sm:block">
-            Open source winter
-          </p>
-          <button
-            type="button"
-            onClick={backToTop}
-            className="group flex items-center gap-3 justify-self-start transition hover:text-white sm:justify-self-end"
-          >
-            <span className="relative">
-              Back to top
-              <span className="absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100" />
-            </span>
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition group-hover:border-cyan-400 group-hover:text-cyan-400">
-              <ArrowUp className="h-4 w-4 transition-transform group-hover:-translate-y-1" />
-            </span>
-          </button>
+        {/* Bottom bar sits on the dark planet below the glowing rim. */}
+        <div className="nsoc-footer__ground">
+          <div className="nsoc-footer__bar">
+            <p>© 2026 NSoC. All rights reserved.</p>
+
+            <p className="hidden uppercase tracking-[0.18em] sm:block">
+              Open source winter
+            </p>
+
+            <button
+              type="button"
+              onClick={backToTop}
+              className="group flex items-center gap-3 justify-self-start transition hover:text-white sm:justify-self-end"
+            >
+              <span className="relative">
+                Back to top
+                <span className="absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100" />
+              </span>
+              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition group-hover:border-cyan-400 group-hover:text-cyan-400">
+                <ArrowUp className="h-4 w-4 transition-transform group-hover:-translate-y-1" />
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Wordmark is inside the footer, clipped by the footer, and cannot leak into the page. */}
-      <div aria-hidden="true" className="nsoc-footer__giant">
+      <div ref={giantRef} aria-hidden="true" className="nsoc-footer__giant">
         <motion.div
-          className="relative"
+          className="nsoc-footer__giant-rise"
           style={reduceMotion ? undefined : { y: wordmarkY }}
         >
-          {/* Outline */}
-          <motion.span
-            style={reduceMotion ? undefined : { opacity: outlineOpacity }}
-            className="nsoc-footer__giant-text nsoc-footer__giant-text--outline"
-          >
+          <span className="nsoc-footer__giant-text nsoc-footer__giant-text--outline">
             NSOC
-          </motion.span>
+          </span>
 
-          {/* Bottom → top fill */}
           <motion.span
-            style={
-              reduceMotion
-                ? undefined
-                : {
-                    clipPath: fillClip,
-                    opacity: glowOpacity,
-                  }
-            }
             className="nsoc-footer__giant-text nsoc-footer__giant-text--solid"
+            style={reduceMotion ? undefined : { clipPath: fillClip }}
           >
             NSOC
           </motion.span>
