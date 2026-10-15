@@ -231,9 +231,21 @@ export const timeline = [
 ] as const;
 
 export const sponsors = [
-  { name: "Unstop", url: "https://unstop.com/p/open-source-program-nexus-spring-of-code-1661333" },
-  { name: "Arkham Experience", url: "https://arkhamarchives.net/" },
-  { name: "Extension Shield", url: "https://extensionshield.com/" },
+  {
+    name: "Unstop",
+    url: "https://unstop.com/p/open-source-program-nexus-spring-of-code-1661333",
+    description: "Connecting developers with opportunities through global hackathons and open-source challenges.",
+  },
+  {
+    name: "Arkham Experience",
+    url: "https://arkhamarchives.net/",
+    description: "Pioneering immersive gaming, VR culture, and next-generation interactive technology experiences.",
+  },
+  {
+    name: "Extension Shield",
+    url: "https://extensionshield.com/",
+    description: "Empowering developers with real-time browser security, privacy tools, and vulnerability shields.",
+  },
 ] as const;
 
 export const partners = [

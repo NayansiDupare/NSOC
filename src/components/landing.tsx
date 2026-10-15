@@ -752,6 +752,12 @@ function Timeline() {
 }
 
 function PartnerNetwork() {
+  const reduceMotion = useReducedMotion();
+
+  const sponsorList = useMemo(() => {
+    return [...sponsors, ...sponsors];
+  }, []);
+
   return (
     <section className="section partner-section">
       <SectionHeading
@@ -766,15 +772,83 @@ function PartnerNetwork() {
         }
         copy="Sponsors and community partners help NSoC give more builders a place to learn, contribute, and be seen."
       />
-      <div className="sponsor-grid">
-        {sponsors.map((sponsor, index) => (
-          <a href={sponsor.url} target="_blank" rel="noreferrer" key={sponsor.name}>
-            <span>SPONSOR / 0{index + 1}</span>
-            <strong>{sponsor.name}</strong>
-            <MoveUpRight size={17} />
-          </a>
-        ))}
-      </div>
+
+      {reduceMotion ? (
+        <div className="sponsor-grid">
+          {sponsors.map((sponsor, index) => (
+            <a
+              href={sponsor.url}
+              target="_blank"
+              rel="noreferrer"
+              key={sponsor.name}
+              className="sponsor-card"
+            >
+              <div className="sponsor-card__header">
+                <span>SPONSOR / 0{index + 1}</span>
+                <MoveUpRight size={17} />
+              </div>
+              <strong className="sponsor-card__name">{sponsor.name}</strong>
+              <p className="sponsor-card__desc">{sponsor.description}</p>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <motion.div
+          className="sponsor-stage-horizontal"
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          aria-label="Horizontally scrolling sponsors directory"
+        >
+          <div className="sponsor-marquee-track">
+            <div className="sponsor-marquee-group">
+              {sponsorList.map((sponsor, index) => {
+                const originalIndex = sponsors.findIndex((s) => s.name === sponsor.name);
+                return (
+                  <a
+                    href={sponsor.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    key={`${sponsor.name}-${index}`}
+                    className="sponsor-card"
+                  >
+                    <div className="sponsor-card__header">
+                      <span>SPONSOR / 0{originalIndex + 1}</span>
+                      <MoveUpRight size={17} />
+                    </div>
+                    <strong className="sponsor-card__name">{sponsor.name}</strong>
+                    <p className="sponsor-card__desc">{sponsor.description}</p>
+                  </a>
+                );
+              })}
+            </div>
+            <div className="sponsor-marquee-group" aria-hidden="true">
+              {sponsorList.map((sponsor, index) => {
+                const originalIndex = sponsors.findIndex((s) => s.name === sponsor.name);
+                return (
+                  <a
+                    href={sponsor.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    key={`clone-${sponsor.name}-${index}`}
+                    tabIndex={-1}
+                    className="sponsor-card"
+                  >
+                    <div className="sponsor-card__header">
+                      <span>SPONSOR / 0{originalIndex + 1}</span>
+                      <MoveUpRight size={17} />
+                    </div>
+                    <strong className="sponsor-card__name">{sponsor.name}</strong>
+                    <p className="sponsor-card__desc">{sponsor.description}</p>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       <div className="partner-cloud" aria-label="Community partners">
         {partners.map((partner, index) => (
           <div key={partner} className="partner-node">

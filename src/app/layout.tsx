@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 
 import { Providers } from "@/components/providers";
 
-import "@fontsource-variable/bricolage-grotesque";
+import "@fontsource-variable/plus-jakarta-sans";
 import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/manrope";
 import "./globals.css";
