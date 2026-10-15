@@ -49,16 +49,16 @@ const socialLinks = [
   },
   {
     name: "GitHub",
-    href: "https://github.com/deepanshu-prajapati01",
+    href: "https://github.com/Raghav7-tech/NSOC",
     icon: FaGithub,
   },
 ];
 
 const footerSections = [
   ["01", "About", "#about"],
-  ["02", "Roles", "#roles"],
+  ["02", "Paths", "#paths"],
   ["03", "Timeline", "#timeline"],
-  ["04", "Sponsors", "#sponsors"],
+  ["04", "Sponsors", "#partners"],
 ] as const;
 
 const HIDDEN_PCT = 22;

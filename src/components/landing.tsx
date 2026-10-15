@@ -118,10 +118,6 @@ function ThemePull() {
 }
 
 function Snowfall() {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) return null;
-
   return (
     <div className="hero-snow" aria-hidden="true">
       {heroSnow.map((flake, index) => (
