@@ -19,6 +19,15 @@ import {
   UserPlus,
 } from "lucide-react";
 
+export const program = {
+  name: "Nexus Winter of Code",
+  edition: "Winter Edition",
+  eyebrow: "45-Day Open Source Sprint",
+  dates: "15 Oct – 30 Dec 2026",
+  description:
+    "A 45-day open source program where project maintainers bring real-world projects, and contributors work on solving actual issues, building features, and shipping production-ready code. No toy projects. No filler tasks. Just meaningful work and a community that grows together.",
+} as const;
+
 export const stats = [
   { value: "45", label: "days of building", suffix: "DAY SPRINT" },
   { value: "10K+", label: "expected participants", suffix: "BUILDERS" },
