@@ -114,13 +114,13 @@ function Header() {
   const [scrolled, setScrolled] = useState(false);
   const reduceMotion = useReducedMotion();
 
-  // Transparent and full width while the hero is under it; once the hero has scrolled
-  // past, it settles into a solid centred bar that stays fixed for the rest of the site.
+  // Transparent and full width while the hero is under it; once the content has scrolled
+  // up over the hero, it settles into a solid centred bar that stays fixed for the rest of the site.
   useEffect(() => {
     const update = () => {
-      const hero = document.getElementById("top");
+      const cover = document.querySelector(".hero-cover");
       const headerBottom = 96;
-      setScrolled(hero ? hero.getBoundingClientRect().bottom <= headerBottom : window.scrollY > 40);
+      setScrolled(cover ? cover.getBoundingClientRect().top <= headerBottom : window.scrollY > 40);
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
@@ -222,6 +222,7 @@ function Header() {
 
 function SignalStrip() {
   const [programStats, setProgramStats] = useState<Stat[]>([...stats]);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -232,18 +233,29 @@ function SignalStrip() {
     return () => controller.abort();
   }, []);
 
+  // As the strip scrolls into view below the hero, each cell drops in from above, one after another.
+  // Same initial state on server and client (no hydration mismatch); reduced motion just skips the animation.
+  const dropIn = (index: number) => ({
+    initial: { opacity: 0, y: -56 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.5 },
+    transition: reduceMotion
+      ? { duration: 0 }
+      : { duration: 0.7, delay: index * 0.14, ease: [0.2, 0.7, 0.2, 1] as const },
+  });
+
   return (
     <section className="signal-strip" id="signal" aria-label="Program snapshot">
-      <div className="signal-intro">
+      <motion.div className="signal-intro" {...dropIn(0)}>
         <span className="status-dot" />
         <p>ONE SEASON · A LOT OF FIRSTS</p>
-      </div>
-      {programStats.map((stat) => (
-        <div className="signal-stat" key={stat.label}>
+      </motion.div>
+      {programStats.map((stat, index) => (
+        <motion.div className="signal-stat" key={stat.label} {...dropIn(index + 1)}>
           <strong>{stat.value}</strong>
           <span>{stat.label}</span>
           <small>{stat.suffix}</small>
-        </div>
+        </motion.div>
       ))}
     </section>
   );
@@ -876,23 +888,28 @@ export function Landing() {
       <Header />
       <main id="main-content" className="page-shell">
         {/* Hero nav hidden for now — the navbar's placement is still to be decided. */}
+        {/* Anchor for "#top" — the hero itself is sticky, so it can't serve as a scroll target. */}
+        <div id="top" />
         <ElsewhereHero
-          id="top"
           brand="NSoC"
+          style={{ position: "sticky", top: 0, zIndex: 0 }}
           showNav={false}
           links={navLinks.map(([label, href]) => ({ label, href }))}
           navCta={{ label: "Join NSoC", href: "https://nsoc.in/register" }}
           headline={`${program.name}.`}
           subline={`${program.eyebrow} built around real projects and meaningful merges. ${program.edition} · ${program.dates}.`}
         />
-        <SignalStrip />
-        <About />
-        <Pathways />
-        <Workflow />
-        <Rewards />
-        <Timeline />
-        <PartnerNetwork />
-        <FinalCta />
+        {/* The hero stays pinned; everything after it scrolls up over it. */}
+        <div className="hero-cover">
+          <SignalStrip />
+          <About />
+          <Pathways />
+          <Workflow />
+          <Rewards />
+          <Timeline />
+          <PartnerNetwork />
+          <FinalCta />
+        </div>
       </main>
       <Footer />
     </div>
