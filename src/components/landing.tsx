@@ -7,7 +7,6 @@ import axios from "axios";
 import confetti from "canvas-confetti";
 import Image from "next/image";
 import {
-  ArrowDown,
   ArrowRight,
   Check,
   ChevronDown,
@@ -17,23 +16,24 @@ import {
   Menu,
   Moon,
   MoveUpRight,
-  Snowflake,
   Sun,
   X,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import {
   AnimatePresence,
   motion,
   useReducedMotion,
 } from "motion/react";
-import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import ElsewhereHero from "@/components/ui/elsewhere-hero";
 import {
   partners,
+  program,
   rewards,
   roles,
   socialLinks,
@@ -64,14 +64,6 @@ const navLinks = [
   ["Partners", "#partners"],
 ] as const;
 
-const heroSnow = Array.from({ length: 24 }, (_, index) => ({
-  left: `${(index * 37 + 5) % 100}%`,
-  delay: -((index * 0.73) % 8),
-  duration: 7 + (index % 6) * 0.9,
-  drift: index % 2 ? 22 : -18,
-  size: 2 + (index % 4),
-}));
-
 function Wordmark() {
   return (
     <a className="wordmark" href="#top" aria-label="NSoC Winter home">
@@ -101,58 +93,45 @@ function Wordmark() {
   );
 }
 
-function ThemePull() {
+// Day / night switch — also swaps the hero between the winter day and night footage.
+// Which icon shows comes from the <html> theme class in CSS, so it never mismatches on hydration.
+function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
 
   return (
     <button
-      className="theme-pull"
       type="button"
-      aria-label="Toggle color theme"
-      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      className="theme-toggle"
+      aria-label="Switch between winter day and night"
+      onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
     >
-      <span className="theme-pull__line" />
-      <span className="theme-pull__knob">
-        <Sun className="theme-icon theme-icon--sun" size={14} />
-        <Moon className="theme-icon theme-icon--moon" size={14} />
-      </span>
+      <Sun className="theme-icon theme-icon--sun" size={18} />
+      <Moon className="theme-icon theme-icon--moon" size={18} />
     </button>
-  );
-}
-
-function Snowfall() {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) return null;
-
-  return (
-    <div className="hero-snow" aria-hidden="true">
-      {heroSnow.map((flake, index) => (
-        <motion.span
-          key={`${flake.left}-${index}`}
-          style={{ left: flake.left, width: flake.size, height: flake.size }}
-          initial={{ y: -30, x: 0, opacity: 0 }}
-          animate={{
-            y: [0, 980],
-            x: [0, flake.drift, flake.drift * 0.45],
-            rotate: [0, 180, 360],
-            opacity: [0, 0.75, 0.5, 0],
-          }}
-          transition={{
-            duration: flake.duration,
-            delay: flake.delay,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-        />
-      ))}
-    </div>
   );
 }
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const reduceMotion = useReducedMotion();
+
+  // Transparent and full width while the hero is under it; once the hero has scrolled
+  // past, it settles into a solid centred bar that stays fixed for the rest of the site.
+  useEffect(() => {
+    const update = () => {
+      const hero = document.getElementById("top");
+      const headerBottom = 96;
+      setScrolled(hero ? hero.getBoundingClientRect().bottom <= headerBottom : window.scrollY > 40);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
 
   const navigateToSection = (
     event: React.MouseEvent<HTMLAnchorElement>,
@@ -174,7 +153,7 @@ function Header() {
   };
 
   return (
-    <header className="site-header">
+    <header className={cn("site-header", scrolled && "site-header--scrolled")}>
       <div className="nav-shell">
         <Wordmark />
         <nav className="desktop-nav" aria-label="Primary navigation">
@@ -185,14 +164,7 @@ function Header() {
           ))}
         </nav>
         <div className="nav-actions">
-          <a className="login-link" href="https://nsoc.in/login">
-            Log in
-          </a>
-          <Button asChild size="sm">
-            <a href="https://nsoc.in/register">
-              Join NSoC <ArrowRight size={15} />
-            </a>
-          </Button>
+          <ThemeToggle />
           <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger asChild>
               <button className="mobile-menu" aria-label="Open navigation">
@@ -221,168 +193,13 @@ function Header() {
                     </Dialog.Close>
                   ))}
                 </nav>
-                <Button asChild>
-                  <a href="https://nsoc.in/register">Join the winter edition</a>
-                </Button>
+                <Button type="button">Join NSoC</Button>
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
         </div>
       </div>
     </header>
-  );
-}
-
-function BorealisCore() {
-  const reduceMotion = useReducedMotion();
-  const [isWaving, setIsWaving] = useState(false);
-
-  return (
-    <motion.div
-      className="borealis-stage"
-      aria-label="Animated winter developer penguin"
-      initial={false}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={reduceMotion ? undefined : { scale: 1.015, rotate: 0.4 }}
-      transition={{ duration: 0.85, delay: 0.15, ease: [0.2, 0.8, 0.2, 1] }}
-    >
-      <div className="stage-grid" aria-hidden="true" />
-      <motion.div
-        className="aurora aurora--one"
-        animate={reduceMotion ? undefined : { rotate: [0, 8, -4, 0], scale: [1, 1.08, 0.96, 1] }}
-        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-        aria-hidden="true"
-      />
-      <motion.div
-        className="aurora aurora--two"
-        animate={reduceMotion ? undefined : { rotate: [0, -12, 5, 0], scale: [1, 0.93, 1.1, 1] }}
-        transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
-        aria-hidden="true"
-      />
-      <div className="orbit orbit--outer" aria-hidden="true"><span className="satellite satellite--one" /></div>
-      <div className="orbit orbit--middle" aria-hidden="true"><span className="satellite satellite--two" /></div>
-      <div className="orbit orbit--inner" aria-hidden="true" />
-      <motion.div
-        className="mascot-core"
-        animate={reduceMotion ? undefined : { y: [0, -10, 0], rotate: [0, -1.5, 1, 0] }}
-        transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <motion.div
-          className="mascot-interaction"
-          onHoverStart={() => setIsWaving(true)}
-          onHoverEnd={() => setIsWaving(false)}
-          onTap={() => setIsWaving((current) => !current)}
-          whileHover={reduceMotion ? undefined : { scale: 1.045, y: -4 }}
-          whileTap={reduceMotion ? undefined : { scale: 0.97 }}
-          transition={{ type: "spring", stiffness: 220, damping: 19 }}
-        >
-          <motion.div
-            className="mascot-pose"
-            animate={
-              isWaving
-                ? { opacity: 0, scale: 0.95, y: 5, rotate: -1.5 }
-                : { opacity: 1, scale: 1, y: 0, rotate: 0 }
-            }
-            transition={{ duration: 0.34, ease: [0.22, 0.8, 0.2, 1] }}
-          >
-            <Image
-              className="mascot-image"
-              src="/winter-penguin.webp"
-              alt="Winter penguin coding on a laptop"
-              width={900}
-              height={900}
-              priority
-              sizes="(max-width: 820px) 55vw, 25vw"
-            />
-          </motion.div>
-          <motion.div
-            className="mascot-pose mascot-pose--wave"
-            initial={false}
-            animate={
-              isWaving
-                ? { opacity: 1, scale: 1, y: 0, rotate: 0 }
-                : { opacity: 0, scale: 0.95, y: 5, rotate: 1.5 }
-            }
-            transition={{ duration: 0.34, ease: [0.22, 0.8, 0.2, 1] }}
-            aria-hidden="true"
-          >
-            <Image
-              className="mascot-image"
-              src="/winter-penguin-wave.webp"
-              alt=""
-              width={900}
-              height={900}
-              priority
-              sizes="(max-width: 820px) 55vw, 25vw"
-            />
-          </motion.div>
-        </motion.div>
-      </motion.div>
-      <motion.div
-        className="mascot-note mascot-note--issue"
-        animate={reduceMotion ? undefined : { x: [0, 7, 0] }}
-        transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <span className="status-dot" /> ISSUE PICKED
-      </motion.div>
-      <motion.div
-        className="mascot-note mascot-note--merge"
-        animate={reduceMotion ? undefined : { x: [0, -7, 0], y: [0, -4, 0] }}
-        transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <GitMerge size={14} /> READY TO MERGE
-      </motion.div>
-      <div className="stage-label stage-label--top">
-        <span>HOVER TO SAY HI</span>
-        <span>OPEN SOURCE / ACTIVE</span>
-      </div>
-      <div className="stage-label stage-label--bottom"><Snowflake size={12} /> BUILT FOR THE COLD</div>
-    </motion.div>
-  );
-}
-
-function Hero() {
-  return (
-    <section className="hero" id="top">
-      <Snowfall />
-      <div className="hero-copy">
-        <div className="eyebrow">
-          <Snowflake size={14} />
-          Applications open · Winter edition
-        </div>
-        <h1>
-          Stop watching.
-          <span>Start contributing.</span>
-        </h1>
-        <p>
-          This winter, trade one tutorial tab for a real codebase. Pick an issue, meet the
-          people behind it, and learn what it feels like to get your work merged.
-        </p>
-        <div className="hero-actions">
-          <Button asChild>
-            <a href="https://nsoc.in/register">
-              Enter the program <ArrowRight size={17} />
-            </a>
-          </Button>
-          <Button asChild variant="secondary">
-            <a href="#paths">
-              Choose your path <ArrowDown size={17} />
-            </a>
-          </Button>
-        </div>
-        <div className="hero-meta" aria-label="Program dates">
-          <span>OCT 15</span>
-          <span className="meta-line" />
-          <span>DEC 30</span>
-          <small>CONTRIBUTION WINDOW</small>
-        </div>
-      </div>
-      <BorealisCore />
-      <a className="scroll-cue" href="#signal" aria-label="Scroll to program snapshot">
-        <span>SEE HOW THE SEASON WORKS</span>
-        <ArrowDown size={14} />
-      </a>
-    </section>
   );
 }
 
@@ -604,7 +421,7 @@ function Rewards() {
       particleCount: 85,
       spread: 72,
       origin: { y: 0.68 },
-      colors: ["#20d5ff", "#8274ff", "#8fffd0", "#ffffff"],
+      colors: ["#7cc4f2", "#a9dbfa", "#dcefff", "#f4f8fc"],
     });
   };
 
@@ -917,9 +734,17 @@ export function Landing() {
       <div className="cursor-light" aria-hidden="true" />
       <div className="grain" aria-hidden="true" />
       <Header />
-      <ThemePull />
       <main id="main-content">
-        <Hero />
+        {/* Hero nav hidden for now — the navbar's placement is still to be decided. */}
+        <ElsewhereHero
+          id="top"
+          brand="NSoC"
+          showNav={false}
+          links={navLinks.map(([label, href]) => ({ label, href }))}
+          navCta={{ label: "Join NSoC", href: "https://nsoc.in/register" }}
+          headline={`${program.name}.`}
+          subline={`${program.eyebrow} built around real projects and meaningful merges. ${program.edition} · ${program.dates}.`}
+        />
         <SignalStrip />
         <About />
         <Pathways />
