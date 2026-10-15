@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState, type CSSProperties } from "react"
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react"
 import Image from "next/image"
 
 /**
@@ -29,6 +29,10 @@ export interface ElsewhereHeroProps {
   showNav?: boolean
   headline?: string
   subline?: string
+  /** Where the headline and subline sit */
+  align?: "center" | "left" | "right"
+  /** Buttons shown under the subline */
+  actions?: ReactNode
   signature?: { name: string; url: string } | false
   objectPosition?: string
   id?: string
@@ -63,6 +67,8 @@ export default function ElsewhereHero({
   showNav = true,
   headline = "Work from somewhere else.",
   subline = "Ambient soundscapes that follow the day — keys by morning, wind and ice by night.",
+  align = "center",
+  actions,
   signature = DEFAULT_SIGNATURE,
   objectPosition = "42% 50%",
   id,
@@ -141,13 +147,18 @@ export default function ElsewhereHero({
       )}
 
       {/* HEADLINE */}
-      <div className="ew-copy">
+      <div className={align === "center" ? "ew-copy" : `ew-copy ew-copy--${align}`}>
         <h1 className="ew-title" style={rise(1)}>
           {headline}
         </h1>
         <p className="ew-sub" style={rise(2)}>
           {subline}
         </p>
+        {actions && (
+          <div className="ew-actions" style={rise(3)}>
+            {actions}
+          </div>
+        )}
       </div>
 
       {/* SIGNATURE */}
@@ -252,6 +263,13 @@ const css = `
 .ew-copy{position:absolute;left:0;right:0;top:clamp(84px,12vh,140px);z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
 .ew-title{margin:0;max-width:14ch;font-weight:500;font-size:clamp(40px,7.2vw,104px);line-height:.96;letter-spacing:-.04em;color:var(--ew-text);text-shadow:0 2px 30px var(--ew-shadow);text-wrap:balance}
 .ew-sub{margin:clamp(14px,2.2vh,22px) 0 0;max-width:40ch;font-size:clamp(15px,1.5vw,18px);line-height:1.5;color:var(--ew-sub);text-shadow:0 1px 16px var(--ew-shadow);text-wrap:pretty}
+.ew-copy--left{align-items:flex-start;text-align:left;padding:0 clamp(20px,5vw,80px)}
+.ew-copy--right{align-items:flex-end;text-align:right;padding:0 clamp(20px,5vw,80px)}
+.ew-copy--left .ew-sub,.ew-copy--right .ew-sub{max-width:52ch}
+.ew-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(20px,3vh,30px)}
+.ew-copy--right .ew-actions{justify-content:flex-end}
+.ew-copy--left .ew-actions{justify-content:flex-start}
+.ew-copy:not(.ew-copy--left):not(.ew-copy--right) .ew-actions{justify-content:center}
 .ew-pill{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 22px;border-radius:999px;font:inherit;font-size:15px;font-weight:500;text-decoration:none;cursor:pointer;transition:transform .25s ease,background .3s ease,border-color .3s ease}
 .ew-pill:active{transform:scale(.97)}
 .ew-small{height:38px;padding:0 16px;font-size:13px}

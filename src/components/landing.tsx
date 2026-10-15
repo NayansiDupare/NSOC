@@ -170,8 +170,11 @@ function Header() {
         </nav>
         <div className="nav-actions">
           <ThemeToggle />
+          <button type="button" className="login-link">
+            Log in
+          </button>
           <Button type="button" size="sm">
-            Join NSoC <ArrowRight size={15} />
+            Sign up
           </Button>
           <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger asChild>
@@ -897,7 +900,18 @@ export function Landing() {
           links={navLinks.map(([label, href]) => ({ label, href }))}
           navCta={{ label: "Join NSoC", href: "https://nsoc.in/register" }}
           headline={`${program.name}.`}
-          subline={`${program.eyebrow} built around real projects and meaningful merges. ${program.edition} · ${program.dates}.`}
+          subline="A 45-day open source program where project maintainers bring real-world projects, and contributors work on solving actual issues, building features, and shipping production-ready code. No toy projects. No filler tasks. Just meaningful work and a community that grows together."
+          align="left"
+          actions={
+            <>
+              <Button type="button">
+                Join now <ArrowRight size={16} />
+              </Button>
+              <Button asChild variant="secondary">
+                <a href="#about">Learn more</a>
+              </Button>
+            </>
+          }
         />
         {/* The hero stays pinned; everything after it scrolls up over it. */}
         <div className="hero-cover">
