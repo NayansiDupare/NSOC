@@ -165,6 +165,9 @@ function Header() {
         </nav>
         <div className="nav-actions">
           <ThemeToggle />
+          <Button type="button" size="sm">
+            Join NSoC <ArrowRight size={15} />
+          </Button>
           <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger asChild>
               <button className="mobile-menu" aria-label="Open navigation">
