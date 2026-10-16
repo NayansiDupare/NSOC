@@ -342,7 +342,14 @@ export default function Footer() {
             alt=""
             fill
             sizes="(max-width: 768px) 70vw, 46vw"
-            className="nsoc-footer__giant-image nsoc-footer__giant-image--outline"
+            className="nsoc-footer__giant-image nsoc-footer__giant-image--outline nsoc-footer__bird--dark"
+          />
+          <Image
+            src="/bird-light.png"
+            alt=""
+            fill
+            sizes="(max-width: 768px) 70vw, 46vw"
+            className="nsoc-footer__giant-image nsoc-footer__giant-image--outline nsoc-footer__bird--light"
           />
 
           <motion.div
@@ -354,7 +361,14 @@ export default function Footer() {
               alt=""
               fill
               sizes="(max-width: 768px) 70vw, 46vw"
-              className="nsoc-footer__giant-image nsoc-footer__giant-image--solid"
+              className="nsoc-footer__giant-image nsoc-footer__giant-image--solid nsoc-footer__bird--dark"
+            />
+            <Image
+              src="/outline2-light.png"
+              alt=""
+              fill
+              sizes="(max-width: 768px) 70vw, 46vw"
+              className="nsoc-footer__giant-image nsoc-footer__giant-image--solid nsoc-footer__bird--light"
             />
           </motion.div>
         </motion.div>

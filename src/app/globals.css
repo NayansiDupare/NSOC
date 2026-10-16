@@ -2312,7 +2312,7 @@ textarea:focus-visible {
 
 .nsoc-footer__giant-rise {
   position: relative;
-  width: min(30rem, 42vw);
+  width: min(25.5rem, 36vw);
   aspect-ratio: 1 / 1;
   transform: translateZ(0);
   will-change: transform;
@@ -2439,7 +2439,7 @@ textarea:focus-visible {
   }
 
   .nsoc-footer__giant-rise {
-    width: min(21rem, 68vw);
+    width: min(18rem, 58vw);
   }
 
   .nsoc-footer__horizon {
@@ -5147,3 +5147,30 @@ html{scrollbar-width:none;-ms-overflow-style:none}html::-webkit-scrollbar,body::
 .hero-cover{position:relative;z-index:1;background:var(--paper);clip-path:inset(0)}
 .hero-cover:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.28;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='88'%3E%3Cpath d='M0 0H88M0 44H88M44 0V88M0 88H88M88 0V88' fill='none' stroke='%237aa6b8' stroke-opacity='.16' stroke-width='.6'/%3E%3Ccircle cx='44' cy='44' r='1' fill='%237aa6b8' fill-opacity='.25'/%3E%3C/svg%3E")}
 button.login-link{border:0;background:none;padding:0;cursor:pointer}
+
+/* Login / register pages — same card and field styling as the sponsor dialog. */
+.auth-page{min-height:100vh;display:grid;place-items:center;padding:2rem 1rem;background:var(--paper)}
+.auth-card{width:min(100%,32rem);padding:clamp(1.35rem,4vw,2.5rem);border:1px solid var(--line-strong);border-radius:1.4rem;background:var(--surface);box-shadow:0 30px 100px var(--shadow)}
+.auth-card > :is(.auth-eyebrow,h1,p){display:block;text-align:center}
+.auth-eyebrow{color:var(--cyan);font-family:var(--font-geist-mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase}
+.auth-card h1{margin:.55rem 0 0;font-size:2rem;letter-spacing:-.045em}
+.auth-card > p{margin:.6rem 0 1.5rem;color:var(--soft);line-height:1.6;font-size:.88rem}
+.auth-card form{display:grid;gap:1rem}
+.auth-card label{display:grid;gap:.45rem;color:var(--muted);font-family:var(--font-geist-mono);font-size:.61rem;letter-spacing:.06em;text-transform:uppercase}
+.auth-card input{width:100%;border:1px solid var(--line);border-radius:.7rem;background:var(--surface-2);color:var(--ink);padding:.85rem .95rem;font-size:.85rem;letter-spacing:0;text-transform:none}
+.auth-card label small{color:#ff706b;font-size:.58rem;text-transform:none}
+.auth-forgot{justify-self:end;margin-top:-.4rem;color:var(--cyan);font-size:.8rem}
+.auth-optional{margin:.5rem 0 0;color:var(--ink);font-weight:600;font-size:.9rem}
+.auth-switch{margin:0;text-align:center;color:var(--soft);font-size:.85rem}
+.auth-switch a{color:var(--cyan);font-weight:600}
+/* Footer bird: white in dark mode, palette blue (#1f72b3) in light mode. */
+.nsoc-footer__bird--light{display:none}
+.light .nsoc-footer__bird--light{display:block}
+.light .nsoc-footer__bird--dark{display:none}
+
+/* Register form: two-column grid, GitHub spans both columns. */
+.auth-page{padding-top:7.5rem}
+.auth-card:has(.auth-grid){width:min(100%,44rem)}
+.auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.auth-grid__full{grid-column:1/-1}
+@media (max-width:580px){.auth-grid{grid-template-columns:1fr}}

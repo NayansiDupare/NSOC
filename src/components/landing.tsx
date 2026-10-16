@@ -22,6 +22,7 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -54,17 +55,9 @@ const sponsorSchema = z.object({
 
 type SponsorForm = z.infer<typeof sponsorSchema>;
 
-const navLinks = [
-  ["About", "#about"],
-  ["Paths", "#paths"],
-  ["Rewards", "#rewards"],
-  ["Timeline", "#timeline"],
-  ["Partners", "#partners"],
-] as const;
-
-function Wordmark() {
+function Wordmark({ href }: { href: string }) {
   return (
-    <a className="wordmark" href="#top" aria-label="NSoC Winter home">
+    <a className="wordmark" href={href} aria-label="NSoC Winter home">
       <span className="wordmark__mark">
         <Image
           className="logo-image logo-image--dark"
@@ -109,14 +102,15 @@ function ThemeToggle() {
   );
 }
 
-function Header() {
+// `solid` keeps the bar in its scrolled look — for pages without the video hero behind it.
+export function Header({ solid = false }: { solid?: boolean }) {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const reduceMotion = useReducedMotion();
+  const [scrolled, setScrolled] = useState(solid);
 
   // Transparent and full width while the hero is under it; once the content has scrolled
   // up over the hero, it settles into a solid centred bar that stays fixed for the rest of the site.
   useEffect(() => {
+    if (solid) return;
     const update = () => {
       const cover = document.querySelector(".hero-cover");
       const headerBottom = 96;
@@ -129,52 +123,19 @@ function Header() {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
-  }, []);
-
-  const navigateToSection = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-    href: (typeof navLinks)[number][1],
-  ) => {
-    event.preventDefault();
-    setOpen(false);
-
-    window.setTimeout(
-      () => {
-        const target = document.querySelector<HTMLElement>(href);
-        if (!target) return;
-
-        window.history.pushState(null, "", href);
-        target.scrollIntoView({
-          behavior: reduceMotion ? "auto" : "smooth",
-          block: "start",
-        });
-      },
-      open ? 120 : 0,
-    );
-  };
+  }, [solid]);
 
   return (
     <header className={cn("site-header", scrolled && "site-header--scrolled")}>
       <div className="nav-shell">
-        <Wordmark />
-        <nav className="desktop-nav" aria-label="Primary navigation">
-          {navLinks.map(([label, href]) => (
-            <a
-              key={href}
-              href={href}
-              onClick={(event) => navigateToSection(event, href)}
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
+        <Wordmark href={solid ? "/" : "#top"} />
         <div className="nav-actions">
           <ThemeToggle />
-          <button type="button" className="login-link">
+          <Link href="/login" className="login-link">
             Log in
-          </button>
-          <Button type="button" size="sm">
-            Sign up
+          </Link>
+          <Button asChild size="sm">
+            <Link href="/register">Sign up</Link>
           </Button>
           <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger asChild>
@@ -200,20 +161,17 @@ function Header() {
                   </Dialog.Close>
                 </div>
                 <nav aria-label="Mobile navigation">
-                  {navLinks.map(([label, href], index) => (
-                    <Dialog.Close asChild key={href}>
-                      <a
-                        href={href}
-                        onClick={(event) => navigateToSection(event, href)}
-                      >
-                        <span>0{index + 1}</span>
-                        {label}
-                        <ArrowRight size={18} />
-                      </a>
-                    </Dialog.Close>
-                  ))}
+                  <Dialog.Close asChild>
+                    <Link href="/login">
+                      <span>01</span>
+                      Log in
+                      <ArrowRight size={18} />
+                    </Link>
+                  </Dialog.Close>
                 </nav>
-                <Button type="button">Join NSoC</Button>
+                <Button asChild>
+                  <Link href="/register">Sign up</Link>
+                </Button>
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
@@ -897,15 +855,16 @@ export function Landing() {
           brand="NSoC"
           style={{ position: "sticky", top: 0, zIndex: 0 }}
           showNav={false}
-          links={navLinks.map(([label, href]) => ({ label, href }))}
           navCta={{ label: "Join NSoC", href: "https://nsoc.in/register" }}
           headline={`${program.name}.`}
           subline="A 45-day open source program where project maintainers bring real-world projects, and contributors work on solving actual issues, building features, and shipping production-ready code. No toy projects. No filler tasks. Just meaningful work and a community that grows together."
           align="left"
           actions={
             <>
-              <Button type="button">
-                Join now <ArrowRight size={16} />
+              <Button asChild>
+                <Link href="/register">
+                  Join now <ArrowRight size={16} />
+                </Link>
               </Button>
               <Button asChild variant="secondary">
                 <a href="#about">Learn more</a>
